@@ -1,0 +1,110 @@
+.maintxt {
+  color: #6a1b9a;
+  font-weight: 700;
+  font-size: 40px;
+}
+
+.subtxt {
+  font-weight: 600;
+}
+
+.frame1 {
+  width: 86%;
+  margin-left: 7%;
+  margin-right: 7%;
+}
+
+.name {
+  font-weight: 700;
+  font-size: 25px;
+}
+
+.story {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 50px;
+  margin-bottom: 60px;
+}
+
+.storydetails {
+  font-size: 20px;
+}
+
+.subscribe {
+  max-width: 800px;
+  margin: 0% auto;
+  background: rgba(183, 57, 255, 0.08);
+  height: 40vh;
+  text-align: center;
+  align-items: center;
+  border-radius: 20px;
+  padding: 45px 12px;
+  margin-bottom: 50px;
+}
+
+.subscribe h1 {
+  margin: 0% 0% 0% 17%;
+  color: black;
+}
+
+.subscribe button {
+  color: #fff;
+  background: #6a1b9a;
+  text-align: center;
+  border-radius: 8px;
+  border: none;
+  padding: 10px 20px;
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.subscribe button:hover {
+  background: #fff;
+  color: #6a1b9a;
+  border: 1px solid #6a1b9a;
+  transition: 0.5s;
+}
+
+@media only screen and (max-width: 600px) {
+  .maintxt {
+    font-size: 25px;
+  }
+
+  .subtxt {
+    font-size: 11px;
+    font-weight: 400;
+  }
+
+  .info {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+
+  .imginfo {
+    width: 40px;
+    align-items: center;
+  }
+
+  .name {
+    font-size: 10px;
+    font-weight: 400;
+  }
+
+  .stark {
+    margin-top: 8px;
+    width: 60px;
+    text-align: center;
+    font-size: 8px;
+  }
+
+  .tminfo {
+    width: 20%;
+    padding: 10px;
+  }
+
+  .storydetails {
+    font-size: 8px;
+    font-weight: 600;
+  }
+}

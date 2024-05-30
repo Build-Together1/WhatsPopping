@@ -1,0 +1,28 @@
+.community_container{
+    color: black;
+    /* margin: 0% auto; */
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.community_container h1, p{
+    color: black;
+    margin: 0%;
+    /* text-align: center; */
+}
+
+.community_container h1{
+    text-align: center;
+    margin: 5% 0 1% 10%;
+    font-size: 3.5rem;
+    font-weight: bolder;
+    color: #3E065E;
+}
+
+.community_container img{
+    width: 80%;
+    height: 80%;
+    margin: 0% auto;
+    padding: 2% 0;
+}

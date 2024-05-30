@@ -1,0 +1,70 @@
+.navbarr {
+    border-bottom: 1px solid black;
+    /* max-width: 1200px; */
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 13rem;
+    padding: 0.3rem 1.3rem;
+}
+.brand, .list_item {
+    color: black;
+}
+.brand {
+    font-size: 1.5rem;
+    font-weight: bolder;
+}
+.nav-link {
+    /* font-weight: ; */
+    color: grey;
+    text-decoration: none;
+    padding: 0.5rem 1rem; 
+}
+.nav-link.active {
+    color: purple !important;
+    font-weight: 500;
+}
+.nav-link:active {
+    color: purple;
+}
+/* .list_item:hover {
+    color: purple;
+} */
+
+.btn {
+    background: blue;
+    border: purple;
+    border-radius: 10px;
+    padding: 0.3rem 1.5rem;
+}
+
+#btn1 {
+    background: purple;
+}
+#btn1:hover {
+    background: white;
+    color: purple;
+    border: 2px solid purple;
+    transition: 0.5s;
+}
+#btn2 {
+    background: none;
+    color: purple;
+    border: 2px solid purple;
+    /* margin: auto; */
+    margin-inline: 10px;
+}
+#btn2:hover {
+    background: purple;
+    color: white;
+    transition: 0.5s;
+}
+
+/* button.Navbar-toggler.collapsed {
+    background: #fff !important;
+}
+
+button.Navbar-toggler {
+    background: #fff !important;
+} */
