@@ -13,32 +13,31 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    gap: 50px;
+    gap: 0px;
 }
 
 .form-image img {
     width: 600px;
-    height: 100vh;
+    height: 160vh;
     margin-left: 20%;
 }
 
 .form-container {
-    padding: 20px 50px;
-    width: 40%;
+    padding: 20px 70px;
+    width: 48%;
+    margin-top: 15%;
 }
 
 .form-header {
-    margin-bottom: 7%;
-    margin-left: 15%;
     text-align: center;
 }
 
 .form-header h1 {
     color: black;
     font-size: 2rem;
-    margin: 0 0 0 35%;
     font-weight: bolder;
     padding-bottom: 5px;
+    margin: 0 0 0 40%;
 }
 
 .form-header p {
@@ -47,41 +46,62 @@ body {
     font-weight: 500;
 }
 
-.progress-bar {
+.navigation-toggle {
     display: flex;
-    flex-direction: row;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 10%;
 }
 
-.progress {
-    padding: 20px;
-    background-color: #ccc;
-    color: white;
-    height: 10px;
-    width: 10px;
-    margin: 0 5px;
-    border-radius: 50px;
-    transition: background-color 0.3s ease;
+.navigation-toggle div {
+    padding: 5px 20px;
+    cursor: pointer;
+    color: purple;
 }
 
-.progress.active {
-    background-color: purple;
-    color: white;
+.navigation-toggle div.active {
+    font-weight: bold;
+    border-bottom: 2px solid purple;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-left: 15%;
+.form-content {
+    min-height: 60vh;
+}
+
+.fm, .fmm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.fm label:nth-child(3), .fmm label:nth-child(3),
+.fm label:nth-child(4), .fmm label:nth-child(4) {
+    grid-column: span 2;
 }
 
 form label {
     color: black;
     font-size: 1rem;
     font-weight: 500;
+}
+
+
+.password-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.password-container input[type="password"],
+.password-container input[type="text"] {
+    width: 90%;
+}
+
+.password-container input[type="checkbox"] {
+    width: 10%;
 }
 
 form input {
@@ -93,6 +113,30 @@ form input {
     width: 100%;
 }
 
+form button {
+    border-radius: 10px;
+    background-color: purple;
+    color: white;
+    border: none;
+    padding: 0.3rem 1.5rem;
+    margin: 8% 0;
+    width: 100%;
+}
+
+form button:hover {
+    background-color: rgb(245, 24, 245);
+}
+
+.ottp{
+    margin-top: 0;
+}
+.ottp h1{
+    color: black;
+    font-size: 2rem;
+    font-weight: bolder;
+    padding-bottom: 5px;
+    margin: 0 0 0 28%;
+}
 .otp-box {
     display: flex;
     gap: 10px;
@@ -100,7 +144,7 @@ form input {
 }
 
 .otp-text {
-    margin-top: 10%;
+    margin-top: 2%;
     color: grey;
     text-align: center;
 }
@@ -110,25 +154,15 @@ form input {
     text-align: center;
 }
 
-.form-buttons {
-    display: flex;
-    justify-content: space-between;
-}
-
-form button {
-    border-radius: 10px;
-    border: none;
-    padding: 0.3rem 1.5rem;
-    margin: 5% 0;
-    width: 46%;
-}
-
-#v {
-    background: rgb(245, 211, 245);
+.get-code span{
     color: purple;
+    cursor: pointer;
+    font-weight: bolder;
 }
 
-.successful{
+
+
+.successful {
     text-align: center;
     width: 100%;
 }
@@ -145,12 +179,13 @@ form button {
     color: grey;
     font-size: 1rem;
     font-weight: 500;
-    margin: 0 0 0 20%;
+    margin: 0 0 5% 20%;
 }
 
-.successful button {
+.successful #btn-login {
     border-radius: 10px;
-    border: purple;
+    background-color: purple;
+    text-decoration: none;
     color: white;
     padding: 0.3rem 1.5rem;
     margin: 5% 5% 5% 25%;
