@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 0px;
+}
+
+.login-image img {
+    width: 600px;
+    height: 100vh;
+    margin-left: 20%;
+}
+
+.login-container {
+    padding: 20px 70px;
+    width: 46%;
+}
+
+.login-header {
+    text-align: center;
+}
+
+.login-header h1 {
+    color: black;
+    font-size: 2rem;
+    font-weight: bolder;
+    padding-bottom: 5px;
+    margin: 0 0 0 26%;
+}
+
+.login-header p {
+    color: grey;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.login-form{
+    margin-top: 7%;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 2% 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.buttonv {
+    width: 100%;
+    padding: 10px 205px;
+    margin: 2% 0;
+    border: none;
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: purple;
+    color: white;
+    cursor: pointer;
+}
+
+.buttonv:hover {
+    background-color: rgb(191, 4, 191);
+}
+
+.login-form p {
+    text-align: right;
+    color: purple;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 3%;
+}
+
+.login-form p:hover {
+    color: rgb(191, 4, 191);
+}
+
+.login-options{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.login-options button {
+    background-color: white;
+    padding: 7px 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-options button:hover {
+    background-color: rgb(191, 4, 191);
+    color: white;
+}
+
+.login-options button:focus {
+    outline: none;
+}
+
+.login-options button i{
+    margin-right: 5px;
+    color: purple;
+}
+
+.signup-option p{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.signup-option p a{
+    color: purple;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+@media screen and (max-width: 768px) {
+    .login {
+        flex-direction: column;
+    }
+
+    .login-image img {
+        display: none;
+    }
+
+    .login-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .login-header {
+        text-align: left;
+    }
+
+    .login-header h1 {
+        margin: 0;
+    }
+
+    .login-form input {
+        width: 100%;
+        margin-bottom: 5%;
+    }
+
+    .buttonv {
+        width: 100%;
+        padding: 10px 50px;
+    }
+
+    .login-options {
+        flex-direction: column;
+    }
+
+    .login-options button {
+        width: 100%;
+        margin: 2% 0;
+    }
+}

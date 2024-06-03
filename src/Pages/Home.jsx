@@ -48,57 +48,50 @@ const Home = () => {
     <div>
       <div className="about-us">
         <section className="about-banner">
-          <h1>Discover events that fuel your passion</h1>
+          <h1> Navigate the Event Verse with Whatspopping</h1>
           <p>
-            From concerts to workshops,find whats ignites you. Never miss out.
-            Get personilised event recommendations
+            Create live or virtual events, discover and book exciting local
+            events, festivals and experiences near you
           </p>
           <div className="banner-buttons">
             <button className="btn-a">Find your next event</button>
-            <button className="btn-b">Create event</button>
+            <button className="btn-b">Create an Accout</button>
           </div>
         </section>
 
         <hr />
 
         <section className="services">
-          <h2>Our Services</h2>
+          <h2>Do more with Whatspopping</h2>
 
-          <div className="service">
-            <div className="each">
-              <div className="each-service">
-                <img src={HuggingImg} alt="" srcset="" />
-              </div>
-              <div className="each-service">
-                <img src={Drinking} alt="" srcset="" />
-              </div>
+          <div className="each">
+            <img src={HuggingImg} alt="" srcset="" />
+            <div>
+              <h3>Discover Events</h3>
+              <p>
+                Create an unforgettable event experience from free to a paid or
+                invite-only event that enhances brand perception. At
+                Whatspopping, we make it easy for event organizers like you to
+                create, promote and sell tickets to your event creating a
+                memorable experience with the right tools and amazing customer
+                support.
+              </p>
             </div>
-            <div className="each">
-              <div className="each-service">
-                <img src={HuggingImg} alt="" srcset="" />
-              </div>
-              <div className="each-service">
-                <img src={Drinking} alt="" srcset="" />
-              </div>
+
+            <div>
+              <h3>Smooth and Secure Payments</h3>
+              <p>
+                Create an unforgettable event experience from free to a paid or
+                invite-only event that enhances brand perception. At
+                Whatspopping, we make it easy for event organizers like you to
+                create, promote and sell tickets to your event creating a
+                memorable experience with the right tools and amazing customer
+                support.
+              </p>
             </div>
+            <img src={Drinking} alt="" srcset="" />
           </div>
         </section>
-
-        {/* <section className="team">
-          <h2>The Team</h2>
-          <div className="each-team">
-            {teamData.map((item, index) => (
-              <div key={index}>
-                <img
-                  className="img-profile"
-                  src={item.image}
-                  alt={`Image ${index + 1}`}
-                />
-                <p>{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </section> */}
 
         <section className="find-event">
           <div className="event-text">
@@ -180,7 +173,7 @@ const Home = () => {
         <section className="newsletter">
           <h1>Subscribe to our Newsletter</h1>
           <p>Get daily updates on event into your inbox</p>
-          <button >Subscribe</button>
+          <button>Subscribe</button>
         </section>
       </div>
       <Footer />

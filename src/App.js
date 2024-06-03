@@ -10,6 +10,7 @@ import Faq from "./Pages/Faq";
 import Event from "./Pages/Event";
 import Error from "./Pages/Error";
 import SignUp from "./auth/SignUp";
+import Login from "./auth/Login";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/event" element={<Event />} />
         <Route path="*" element={<Error />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );

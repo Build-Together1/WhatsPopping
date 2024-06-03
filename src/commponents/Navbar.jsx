@@ -14,11 +14,10 @@ const Topnav = () => {
 
   const location = useLocation();
 
-  // Check if the current path is "/signup"
-  const isSignupPage = location.pathname === "/signup";
+  const isSignupOrLoginPage = location.pathname === "/signup" || location.pathname === "/login";
 
-  if (isSignupPage) {
-    return null; // Return null to hide the navbar on the signup page
+  if (isSignupOrLoginPage) {
+    return null;
   }
 
   return (
@@ -48,9 +47,9 @@ const Topnav = () => {
             <NavLink className="btn btn-success" id="btn1" to="/signup">
               Sign Up
             </NavLink>
-            <button className="btn btn-success" id="btn2">
-              Log In
-            </button>
+            <NavLink className="btn btn-primary" id="btn2" to="/login">
+              Login
+            </NavLink>
           </Nav>
         </Navbar.Collapse>
       </Container>

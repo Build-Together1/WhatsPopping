@@ -65,3 +65,24 @@
   text-align: center;
   margin-top: 2%;
 }
+
+
+@media screen and (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .footer-links {
+    width: 100%;
+  }
+  .footer-text {
+    width: 100%;
+  }
+  .social-links {
+    justify-content: left;
+  }
+  .buttom {
+    text-align: center;
+  }
+  
+}

@@ -70,3 +70,18 @@ h1{
     width: 150%;
     height: 80vh;
 }
+
+
+@media screen and (max-width: 768px) {
+  .faq-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .faq-text{
+    padding-left: 0;
+  }
+  .faq-img img{
+    display: none;
+  }
+  
+}
