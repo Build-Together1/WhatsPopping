@@ -180,13 +180,12 @@ hr {
   margin-top: 3%;
 }
 
-/* let's do the mobile responsiveness */
 
 @media screen and (max-width: 768px) {
   .about-banner {
     max-width: 100%;
     padding: 15% 20px 20px 20px;
-    margin: 5% auto 10% auto;
+    margin:0% auto 10% auto;
     text-align: center;
     background-image: url(../assets/images/image\ 171.png);
   }
