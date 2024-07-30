@@ -1,26 +1,112 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "../styles/Signup.css";
 import { NavLink } from "react-router-dom";
 import SignupBg from "../assets/images/signup-background.png";
+import { Spinner } from "react-bootstrap";
 
 const SignUp = () => {
   const [selectedForm, setSelectedForm] = useState("personal");
   const [currentStep, setCurrentStep] = useState("form");
   const [showPersonalPassword, setShowPersonalPassword] = useState(false);
-  const [showPersonalConfirmPassword, setShowPersonalConfirmPassword] = useState(false);
+  const [showPersonalConfirmPassword, setShowPersonalConfirmPassword] =
+    useState(false);
   const [showCorporatePassword, setShowCorporatePassword] = useState(false);
-  const [showCorporateConfirmPassword, setShowCorporateConfirmPassword] = useState(false);
+  const [showCorporateConfirmPassword, setShowCorporateConfirmPassword] =
+    useState(false);
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email_address: "",
+    phone_number: "",
+    state: "",
+    country: "",
+    password: "",
+    confirm_password: "",
+    organization_name: "",
+    organization_description: "",
+  });
+  const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleFormToggle = (form) => {
     setSelectedForm(form);
   };
 
-  const handleSubmitForm = () => {
-    setCurrentStep("otp");
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmitOtp = () => {
-    setCurrentStep("success");
+  const handleSubmitForm = async () => {
+    setLoading(true);
+    const url =
+      selectedForm === "personal"
+        ? "https://whats-popping-server.onrender.com/create-individual-account"
+        : "https://whats-popping-server.onrender.com/create-corporate-account";
+
+    try {
+      const response = await axios.post(url, formData);
+      if (response.status === 201) {
+        const otpUrl =
+          selectedForm === "personal"
+            ? "https://whats-popping-server.onrender.com/individual-account-generate-otp"
+            : "https://whats-popping-server.onrender.com/corporate-account-generate-otp";
+        
+        await axios.post(otpUrl, { email_address: formData.email_address });
+        setOtpSent(true);
+        setCurrentStep("otp");
+      } else {
+        setError("Signup failed. Please try again.");
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 409) {
+          setError(
+            "Conflict: It seems there is an issue with the data you provided."
+          );
+        } else {
+          setError(
+            `Error: ${
+              error.response.data.message ||
+              "An error occurred. Please try again."
+            }`
+          );
+        }
+      } else if (error.request) {
+        setError(
+          "No response from the server. Please check your internet connection."
+        );
+      } else {
+        setError("An error occurred while setting up the request.");
+      }
+      console.error("Error signing up:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitOtp = async () => {
+    try {
+      const otpUrl =
+        selectedForm === "personal"
+          ? "https://whats-popping-server.onrender.com/individual-account-verify-otp"
+          : "https://whats-popping-server.onrender.com/corporate-account-verify-otp";
+
+      const response = await axios.post(otpUrl, {
+        email_address: formData.email_address,
+        otp: otp,
+      });
+      if (response.status === 200) {
+        setCurrentStep("success");
+      } else {
+        setError("Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      setError("Error verifying OTP. Please try again.");
+      console.error("Error verifying OTP:", error);
+    }
   };
 
   return (
@@ -30,6 +116,7 @@ const SignUp = () => {
           <div className="form-header">
             <h1>Sign Up</h1>
             <p>Enter details below to create your account</p>
+            {error && <p className="error-message">{error}</p>}
           </div>
         )}
 
@@ -58,45 +145,65 @@ const SignUp = () => {
               {selectedForm === "personal" && (
                 <form className="personal">
                   <div className="fm">
-                    <label htmlFor="firstname">
+                    <label htmlFor="first_name">
                       First Name <br />
                       <input
                         type="text"
-                        id="firstname"
-                        name="firstname"
+                        id="first_name"
+                        name="first_name"
                         placeholder="Enter first name"
+                        onChange={handleChange}
                       />
                     </label>
-                    <label htmlFor="lastname">
+                    <label htmlFor="last_name">
                       Last Name <br />
                       <input
                         type="text"
-                        id="lastname"
-                        name="lastname"
+                        id="last_name"
+                        name="last_name"
                         placeholder="Enter last name"
+                        onChange={handleChange}
                       />
                     </label>
-                    <label htmlFor="email">
+                    <label htmlFor="email_address">
                       Email Address <br />
                       <input
                         type="email"
-                        id="email"
-                        name="email"
+                        id="email_address"
+                        name="email_address"
                         placeholder="johnsmith@gmail.com"
+                        onChange={handleChange}
                       />
                     </label>
-                    <label htmlFor="phone">
+                    <label htmlFor="phone_number">
                       Phone Number <br />
                       <input
                         type="tel"
-                        id="phone"
-                        name="phone"
+                        id="phone_number"
+                        name="phone_number"
                         placeholder="Enter phone number"
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <label htmlFor="state">
+                      State <br />
+                      <input
+                        type="text"
+                        id="state"
+                        name="state"
+                        placeholder="Enter state"
+                        onChange={handleChange}
                       />
                     </label>
                     <label htmlFor="country">
                       Country <br />
-                      <input type="text" name="country" id="country" />
+                      <input
+                        type="text"
+                        id="country"
+                        name="country"
+                        placeholder="Enter country"
+                        onChange={handleChange}
+                      />
                     </label>
                     <label htmlFor="password">
                       Create Password <br />
@@ -106,86 +213,135 @@ const SignUp = () => {
                           id="password"
                           name="password"
                           placeholder="Enter password"
+                          onChange={handleChange}
                         />
                         <input
                           type="checkbox"
                           checked={showPersonalPassword}
-                          onChange={() => setShowPersonalPassword((prev) => !prev)}
+                          onChange={() =>
+                            setShowPersonalPassword((prev) => !prev)
+                          }
                         />
                       </div>
                     </label>
-                    <label htmlFor="confirmpassword">
+                    <label htmlFor="confirm_password">
                       Confirm Password <br />
                       <div className="password-container">
                         <input
-                          type={showPersonalConfirmPassword ? "text" : "password"}
-                          id="confirmpassword"
-                          name="confirmpassword"
+                          type={
+                            showPersonalConfirmPassword ? "text" : "password"
+                          }
+                          id="confirm_password"
+                          name="confirm_password"
                           placeholder="Confirm password"
+                          onChange={handleChange}
                         />
                         <input
                           type="checkbox"
                           checked={showPersonalConfirmPassword}
-                          onChange={() => setShowPersonalConfirmPassword((prev) => !prev)}
+                          onChange={() =>
+                            setShowPersonalConfirmPassword((prev) => !prev)
+                          }
                         />
                       </div>
                     </label>
                   </div>
-                  <button type="button" onClick={handleSubmitForm}>Create Account</button>
+                  <button type="button" onClick={handleSubmitForm}>
+                    {loading ? (
+                      <Spinner
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      "Create Account"
+                    )}
+                  </button>
                 </form>
               )}
 
               {selectedForm === "corporate" && (
                 <form className="corporate">
                   <div className="fmm">
-                    <label htmlFor="firstname">
+                    <label htmlFor="first_name">
                       First Name <br />
                       <input
                         type="text"
-                        id="firstname"
-                        name="firstname"
+                        id="first_name"
+                        name="first_name"
                         placeholder="Enter first name"
+                        onChange={handleChange}
                       />
                     </label>
-                    <label htmlFor="lastname">
+                    <label htmlFor="last_name">
                       Last Name <br />
                       <input
                         type="text"
-                        id="lastname"
-                        name="lastname"
+                        id="last_name"
+                        name="last_name"
                         placeholder="Enter last name"
+                        onChange={handleChange}
                       />
                     </label>
-                    <label htmlFor="companyname">
-                      Company Name <br />
+                    <label htmlFor="organization_name">
+                      Organization Name <br />
                       <input
                         type="text"
-                        id="companyname"
-                        name="companyname"
-                        placeholder="Enter your Company Name"
+                        id="organization_name"
+                        name="organization_name"
+                        placeholder="Enter your organization name"
+                        onChange={handleChange}
                       />
                     </label>
-                    <label htmlFor="email">
+                    <label htmlFor="organization_description">
+                      Organization Description <br />
+                      <textarea
+                        id="organization_description"
+                        name="organization_description"
+                        placeholder="Enter organization description"
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <label htmlFor="email_address">
                       Email Address <br />
                       <input
                         type="email"
-                        id="email"
-                        name="email"
+                        id="email_address"
+                        name="email_address"
                         placeholder="johnsmith@gmail.com"
+                        onChange={handleChange}
                       />
                     </label>
-                    <label htmlFor="phone">
+                    <label htmlFor="phone_number">
                       Phone Number <br />
                       <input
                         type="tel"
-                        id="phone"
-                        name="phone"
+                        id="phone_number"
+                        name="phone_number"
                         placeholder="Enter phone number"
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <label htmlFor="state">
+                      State <br />
+                      <input
+                        type="text"
+                        id="state"
+                        name="state"
+                        placeholder="Enter state"
+                        onChange={handleChange}
                       />
                     </label>
                     <label htmlFor="country">
                       Country <br />
-                      <input type="text" name="country" id="country" />
+                      <input
+                        type="text"
+                        id="country"
+                        name="country"
+                        placeholder="Enter country"
+                        onChange={handleChange}
+                      />
                     </label>
                     <label htmlFor="password">
                       Create Password <br />
@@ -195,74 +351,84 @@ const SignUp = () => {
                           id="password"
                           name="password"
                           placeholder="Enter password"
+                          onChange={handleChange}
                         />
                         <input
                           type="checkbox"
                           checked={showCorporatePassword}
-                          onChange={() => setShowCorporatePassword((prev) => !prev)}
+                          onChange={() =>
+                            setShowCorporatePassword((prev) => !prev)
+                          }
                         />
                       </div>
                     </label>
-                    <label htmlFor="confirmpassword">
+                    <label htmlFor="confirm_password">
                       Confirm Password <br />
                       <div className="password-container">
                         <input
-                          type={showCorporateConfirmPassword ? "text" : "password"}
-                          id="confirmpassword"
-                          name="confirmpassword"
+                          type={
+                            showCorporateConfirmPassword ? "text" : "password"
+                          }
+                          id="confirm_password"
+                          name="confirm_password"
                           placeholder="Confirm password"
+                          onChange={handleChange}
                         />
                         <input
                           type="checkbox"
                           checked={showCorporateConfirmPassword}
-                          onChange={() => setShowCorporateConfirmPassword((prev) => !prev)}
+                          onChange={() =>
+                            setShowCorporateConfirmPassword((prev) => !prev)
+                          }
                         />
                       </div>
                     </label>
                   </div>
-                  <button type="button" onClick={handleSubmitForm}>Create Account</button>
+                  <button type="button" onClick={handleSubmitForm}>
+                    {loading ? (
+                      <Spinner
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      "Create Account"
+                    )}
+                  </button>
                 </form>
               )}
             </>
           )}
 
           {currentStep === "otp" && (
-            <form className="ottp">
-              <h1>OTP Verification</h1>
-              <p className="otp-text">
-                Enter the 6 digits OTP sent to your email address
-                dan*******@gmail.com
-              </p>
-              <div className="otp-box">
-                <input type="text" />
-                <input type="text" />
-                <input type="text" />
-                <input type="text" />
-                <input type="text" />
-                <input type="text" />
-              </div>
-              <p className="get-code">
-                Didn't get the code? <span>Resend</span>
-              </p>
-
-              <button type="button" onClick={handleSubmitOtp}>Continue</button>
-            </form>
+            <div className="otp-verification">
+              <h2>OTP Verification</h2>
+              <p>Enter the OTP sent to your email address.</p>
+              <input
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="Enter OTP"
+              />
+              <button type="button" onClick={handleSubmitOtp}>
+                Verify OTP
+              </button>
+              {error && <p className="error-message">{error}</p>}
+            </div>
           )}
 
           {currentStep === "success" && (
-            <div className="successful">
-              <h1>Registration Successful!</h1>
-              <p>
-                You have successfully created an account. Click below to login
-              </p>
-              <NavLink id="btn-login" to="/">
-              login
-            </NavLink>
+            <div className="success-message">
+              <h2>Account Created Successfully!</h2>
+              <p>You can now log in to your account.</p>
+              <NavLink to="/login">
+                <button type="button">Go to Login</button>
+              </NavLink>
             </div>
           )}
         </div>
       </div>
-
       <div className="form-image">
         <img src={SignupBg} alt="Signup Background" />
       </div>

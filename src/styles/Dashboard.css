@@ -1,0 +1,144 @@
+/* src/styles/Dashboard.css */
+
+.dashboard {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .dashboard h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .user-details,
+  .events-section,
+  .create-event-section {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .user-details h2,
+  .events-section h2,
+  .create-event-section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .user-details p,
+  .event-details p {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  
+  .events-section .event-nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .events-section .event-nav span {
+    margin: 0 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .events-section .event-nav .active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+  
+  .events-section .event-nav span:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .events-section .events {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .events-section .event {
+    width: 300px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .events-section .event img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .events-section .event .event-details {
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  .events-section .event .event-details h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .events-section .event .event-details p {
+    margin: 5px 0;
+  }
+  
+  .events-section .event .event-details .event-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .events-section .event .event-details .event-price p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .events-section .event:hover {
+    transform: translateY(-5px);
+  }
+  
+  .create-event-section form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .create-event-section form label {
+    margin-bottom: 10px;
+  }
+  
+  .create-event-section form input,
+  .create-event-section form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .create-event-section form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .create-event-section form button:hover {
+    background-color: #0056b3;
+  }
+  

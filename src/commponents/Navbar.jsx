@@ -5,18 +5,20 @@ import "./Navbar.css";
 
 const Topnav = () => {
   const menuData = [
-    { path: "/", name: "Home" },
-    { path: "/community", name: "Community" },
     { path: "/about-us", name: "About Us" },
+    { path: "/community", name: "Solutions" },
+    { path: "/event", name: "Events" },
+    { path: "/blog", name: "Blog" },
+    { path: "/faq", name: "FAQ" },
     { path: "/contact", name: "Contact" },
-    { path: "/event", name: "Event" },
+
   ];
 
   const location = useLocation();
 
-  const isSignupOrLoginPage = location.pathname === "/signup" || location.pathname === "/login";
+  const isAuthPage = ["/signup", "/login", "/forgot-password"].includes(location.pathname);
 
-  if (isSignupOrLoginPage) {
+  if (isAuthPage) {
     return null;
   }
 

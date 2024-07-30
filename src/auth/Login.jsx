@@ -1,52 +1,116 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 import SignupBg from "../assets/images/signup-background.png";
 import "../styles/Login.css";
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    email_address: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await axios.post("https://whats-popping-server.onrender.com/auth/login", formData);
+
+      if (response.status === 200) {
+        localStorage.setItem("token", response.data.token);
+        window.location.href = "/home";
+      } else {
+        setError("Login failed. Please try again.");
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(
+          `Error: ${
+            error.response.data.message || "An error occurred. Please try again."
+          }`
+        );
+      } else if (error.request) {
+        setError(
+          "No response from the server. Please check your internet connection."
+        );
+      } else {
+        setError("An error occurred while setting up the request.");
+      }
+      console.error("Error logging in:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="login">
       <div className="login-container">
         <div className="login-header">
           <h1>Welcome Back</h1>
           <p>Sign in to your WhatsPopping account</p>
+          
         </div>
 
         <div className="login-form">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="exampleInputEmail1" className="form-label">
+              <label htmlFor="email_address" className="form-label">
                 Email address
               </label>
-              <input type="email" />
+              <input
+                type="email"
+                id="email_address"
+                name="email_address"
+                value={formData.email_address}
+                onChange={handleChange}
+                placeholder="Enter your email address"
+              />
             </div>
             <div className="mb-3">
-              <label htmlFor="exampleInputPassword1" className="form-label">
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
-              <input type="password" />
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+              />
             </div>
 
-            <NavLink className="buttonv" to="/">
-              Login
-            </NavLink>
+            <button type="submit" className="buttonv">
+              {loading ? "Logging in..." : "Login"}
+            </button>
 
-            <p className="forget-password">Forgot Password ?</p>
+            <p className="error-message">{error && <strong className="n">{error}</strong>}</p>
+
+            <p className="forget-password">
+              <NavLink to="/forgot-password">Forgot Password?</NavLink>
+            </p>
           </form>
         </div>
 
         <div className="login-options">
           <button>
-            <i class="fa fa-google"></i> Sign up with Google
+            <i className="fa fa-google"></i> Sign in with Google
           </button>
           <button>
-            <i class="fa fa-facebook"></i> Sign up with Facebook
+            <i className="fa fa-facebook"></i> Sign in with Facebook
           </button>
         </div>
 
         <div className="signup-option">
           <p>
-            Don't have an account? <a href="/signup">Sign Up</a>
+            Don't have an account? <NavLink to="/signup">Sign Up</NavLink>
           </p>
         </div>
       </div>

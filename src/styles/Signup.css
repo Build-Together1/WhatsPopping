@@ -17,15 +17,15 @@ body {
 }
 
 .form-image img {
-  width: 600px;
-  height: 160vh;
+  width: 650px;
+  height: 180vh;
   margin-left: 20%;
 }
 
 .form-container {
-  padding: 20px 70px;
-  width: 48%;
-  margin-top: 15%;
+  padding: 20px 70px 20px 100px;
+  width: 50%;
+  margin-top: 18%;
 }
 
 .form-header {
@@ -105,7 +105,11 @@ form label {
 .password-container input[type="checkbox"] {
   width: 10%;
 }
-
+#organization_description{
+  height: 100px;
+  width: 100%;
+  padding: 0.3rem 1.5rem 0.3rem 1rem;
+}
 form input {
   padding: 0.3rem 1.5rem 0.3rem 1rem;
   border-radius: 10px;
