@@ -56,8 +56,8 @@
 }
 
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 500px) {
     .navbar{
-        gap: 3rem;
+        gap: 2.5rem;
     }
 }

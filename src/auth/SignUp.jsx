@@ -91,8 +91,8 @@ const SignUp = () => {
     try {
       const otpUrl =
         selectedForm === "personal"
-          ? "https://whats-popping-server.onrender.com/individual-account-verify-otp"
-          : "https://whats-popping-server.onrender.com/corporate-account-verify-otp";
+          ? "https://whats-popping-server.onrender.com/individual-account-verify-email"
+          : "https://whats-popping-server.onrender.com/corporate-account-verify-email";
 
       const response = await axios.post(otpUrl, {
         email_address: formData.email_address,
@@ -422,8 +422,8 @@ const SignUp = () => {
             <div className="success-message">
               <h2>Account Created Successfully!</h2>
               <p>You can now log in to your account.</p>
-              <NavLink to="/login">
-                <button type="button">Go to Login</button>
+              <NavLink to="/">
+                <button type="button">Go to home</button>
               </NavLink>
             </div>
           )}

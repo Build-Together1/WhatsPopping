@@ -9,8 +9,8 @@ const Topnav = () => {
     { path: "/community", name: "Solutions" },
     { path: "/event", name: "Events" },
     { path: "/blog", name: "Blog" },
-    { path: "/faq", name: "FAQ" },
-    { path: "/contact", name: "Contact" },
+    { path: "/faq", name: "FAQ's" },
+    // { path: "/contact", name: "Contact" },
 
   ];
 
@@ -25,7 +25,7 @@ const Topnav = () => {
   return (
     <Navbar expand="lg" className="navbarr">
       <Container className="navbar">
-        <Navbar.Brand href="#home" className="brand">
+        <Navbar.Brand href="/" className="brand">
           WhatsPopping
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
