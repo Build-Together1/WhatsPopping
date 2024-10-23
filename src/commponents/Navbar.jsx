@@ -6,19 +6,27 @@ import "./Navbar.css";
 const Topnav = () => {
   const menuData = [
     { path: "/about-us", name: "About Us" },
-    { path: "/community", name: "Solutions" },
     { path: "/event", name: "Events" },
+    { path: "/pricing", name: "Pricing" },
     { path: "/blog", name: "Blog" },
     { path: "/faq", name: "FAQ's" },
-    // { path: "/contact", name: "Contact" },
-
   ];
 
   const location = useLocation();
 
-  const isAuthPage = ["/signup", "/login", "/forgot-password"].includes(location.pathname);
+  const isAuthOrDashboardPage = [
+    "/signup", 
+    "/login", 
+    "/forgot-password", 
+    "/dashboard-wrapper", 
+    "/dashboard",
+    "/admin-dashboard",
+    "/event-management",
+    "/attendee-management",
+    "/settings",
+  ].includes(location.pathname);
 
-  if (isAuthPage) {
+  if (isAuthOrDashboardPage) {
     return null;
   }
 

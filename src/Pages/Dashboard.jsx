@@ -1,13 +1,11 @@
-// src/components/Dashboard.js
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../styles/Dashboard.css"; // Create this CSS file to style your dashboard
-import { getEvents } from "../data/event"; // Import the events data
+import "../styles/Dashboard.css"; 
+import { getEvents } from "../data/event"; 
 
 const Dashboard = () => {
   const [userDetails, setUserDetails] = useState(null);
-  const [userType, setUserType] = useState(""); // "individual" or "corporate"
+  const [userType, setUserType] = useState(""); 
   const [currentCategory, setCurrentCategory] = useState("paid");
 
   useEffect(() => {
@@ -24,7 +22,7 @@ const Dashboard = () => {
         });
 
         setUserDetails(response.data);
-        setUserType(response.data.accountType); // Assuming accountType is "individual" or "corporate"
+        setUserType(response.data.accountType); 
       } catch (err) {
         console.error("Failed to fetch user details. Please try again.");
       }
@@ -99,7 +97,7 @@ const Dashboard = () => {
       {userType === "corporate" && (
         <div className="create-event-section">
           <h2>Create an Event</h2>
-          {/* Add your event creation form/component here */}
+          
         </div>
       )}
     </div>

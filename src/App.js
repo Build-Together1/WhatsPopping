@@ -14,6 +14,15 @@ import SignUp from "./auth/SignUp";
 import Login from "./auth/Login";
 import ForgotPassword from "./auth/ForgotPassword";
 import Dashboard from "./Pages/Dashboard";
+import Pricing from "./Pages/Pricing";
+import DashboardWrapper from './dashboard/DashboardWrapper';
+import Header from './dashboard/component/Header';
+import Sidebar from './dashboard/component/AdminSideBar';
+import AdminDashboard from "./dashboard/AdminDashboard";
+import EventManagement from "./dashboard/EventManagement";
+import AttendeeManagement from "./dashboard/AttendeeManagement";
+import Settings from "./dashboard/Settings";
+
 
 function App() {
   return (
@@ -32,6 +41,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/dashboard-wrapper" element={<DashboardWrapper />} />
+        <Route path="/admin-dashboard" element={<DashboardWrapper><AdminDashboard /></DashboardWrapper>} />
+        <Route path="/event-management" element={<DashboardWrapper><EventManagement /></DashboardWrapper>} />
+        <Route path="/attendee-management" element={<DashboardWrapper><AttendeeManagement /></DashboardWrapper>} />
+        <Route path="/settings" element={<DashboardWrapper><Settings /></DashboardWrapper>} />
       </Routes>
     </Router>
   );

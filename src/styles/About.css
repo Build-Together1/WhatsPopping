@@ -6,12 +6,12 @@
 
 .subtxt {
   font-weight: 600;
+  font-size: 18px;
 }
 
 .frame1 {
   width: 86%;
-  margin-left: 7%;
-  margin-right: 7%;
+  margin: 0 auto;
 }
 
 .name {
@@ -21,10 +21,11 @@
 
 .story {
   width: 80%;
-  margin-left: 10%;
-  margin-right: 10%;
-  margin-top: 50px;
-  margin-bottom: 60px;
+  margin: 50px auto;
+}
+
+.tminfo {
+  padding-bottom: 20px;
 }
 
 .storydetails {
@@ -33,25 +34,27 @@
 
 .subscribe {
   max-width: 800px;
-  margin: 0% auto;
+  margin: 0 auto 50px;
   background: rgba(183, 57, 255, 0.08);
   height: 40vh;
   text-align: center;
-  align-items: center;
   border-radius: 20px;
   padding: 45px 12px;
-  margin-bottom: 50px;
 }
 
 .subscribe h1 {
-  margin: 0% 0% 0% 17%;
   color: black;
+  text-align: center;
+  margin-left: 9.5%;
+}
+
+.subscribe p{
+  margin-top: -6%;
 }
 
 .subscribe button {
   color: #fff;
   background: #6a1b9a;
-  text-align: center;
   border-radius: 8px;
   border: none;
   padding: 10px 20px;
@@ -72,39 +75,47 @@
   }
 
   .subtxt {
-    font-size: 11px;
-    font-weight: 400;
+    font-size: 14px;
   }
 
-  .info {
-    margin-left: 10%;
-    margin-right: 10%;
-  }
-
-  .imginfo {
-    width: 40px;
-    align-items: center;
-  }
-
-  .name {
-    font-size: 10px;
-    font-weight: 400;
-  }
-
-  .stark {
-    margin-top: 8px;
-    width: 60px;
-    text-align: center;
-    font-size: 8px;
+  .frame1 {
+    width: 100%;
   }
 
   .tminfo {
-    width: 20%;
+    width: 100%;
     padding: 10px;
   }
 
+  .imginfo {
+    width: 100px;
+    margin: 0 auto;
+  }
+
+  .name {
+    font-size: 18px;
+  }
+
+  .stark {
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+  }
+
   .storydetails {
-    font-size: 8px;
-    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .subscribe {
+    height: auto;
+    padding: 20px;
+  }
+
+  .subscribe h1 {
+    font-size: 20px;
+  }
+
+  .subscribe button {
+    font-size: 16px;
   }
 }

@@ -21,11 +21,11 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://whats-popping-server.onrender.com/auth/login", formData);
+      const response = await axios.post("https://whats-popping-server.onrender.com/account/login", formData);
 
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
-        window.location.href = "/home";
+        window.location.href = "/admin-dashboard";
       } else {
         setError("Login failed. Please try again.");
       }

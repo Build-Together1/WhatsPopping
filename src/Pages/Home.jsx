@@ -70,7 +70,7 @@ const Home = () => {
     if (!isLoading) {
       const interval = setInterval(() => {
         setBackgroundImage((prev) => (prev + 1) % 4); 
-      }, 3000);
+      }, 5000);
 
       return () => clearInterval(interval);
     }
@@ -108,6 +108,49 @@ const Home = () => {
         <section className="services">
           <h2>Do more with Whatspopping</h2>
 
+          <div className="each">
+            <div className="xc">
+              <h3>Plan Events</h3>
+              <p>
+                Create an unforgettable event experience from free to a paid or
+                invite-only event that enhances brand perception. At
+                Whatspopping, we make it easy for event organizers like you to
+                create, promote, and sell tickets to your event, creating a
+                memorable experience with the right tools and amazing customer
+                support.
+              </p>
+              <ul>
+                <li><img src={ListSetting} alt="" />Attendee Management</li>
+                <li><img src={Share} alt="" />Email Messaging</li>
+                <li><img src={EmailMessage} alt="" />SMS and WhatsApp Messaging</li>
+                <li><img src={RSVP} alt="" />Digital RSVP Forms</li>
+                <li><img src={TimeManagement} alt="" />Session and Attendee Management</li>
+                <li><img src={QRcode} alt="" />QR Code Creation</li>
+              </ul>
+            </div>
+            <img className="es" src={Amico} alt="" />
+            <img className="ex" src={Bro} alt="" />
+            <div className="xs">
+              <h3>Smooth and Secure Payments</h3>
+              <p>
+                Create an unforgettable event experience from free to a paid or
+                invite-only event that enhances brand perception. At
+                Whatspopping, we make it easy for event organizers like you to
+                create, promote, and sell tickets to your event, creating a
+                memorable experience with the right tools and amazing customer
+                support.
+              </p>
+              <ul>
+                <li><img src={Artboard} alt="" />Event Creation & Promotion</li>
+                <li><img src={Ticket} alt="" />Ticket Sales Management</li>
+                <li><img src={CustomerServices} alt="" />Customized Event Branding</li>
+                <li><img src={Analysis} alt="" />Advanced Analytics & Reporting</li>
+                <li><img src={Payment} alt="" />Seamless Payment Integration</li>
+                <li><img src={CustomerSupport} alt="" />Exceptional Customer Support</li>
+              </ul>
+            </div>
+          </div>
+          <br /><br />
           <div className="each">
             <div className="xc">
               <h3>Plan Events</h3>
@@ -242,7 +285,7 @@ const Home = () => {
           </div>
         </section>
 
-        <FAQ />
+        {/* <FAQ /> */}
 
         <section className="newsletter">
           <h1>Subscribe to our Newsletter</h1>

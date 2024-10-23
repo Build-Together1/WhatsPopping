@@ -1,0 +1,118 @@
+.pricing-container{
+    color: black;
+    /* margin: 0% auto; */
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.pricing-container h1, p{
+    color: black;
+    margin: 0%;
+    /* text-align: center; */
+}
+
+.pricing-container h1{
+    text-align: center;
+    margin: 5% 0 1% 10%;
+    font-size: 3.5rem;
+    font-weight: bolder;
+    color: #3E065E;
+}
+
+.pricing-cards{
+    display: grid;
+    max-width: 90%;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5%;
+    margin: 0% auto;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5%;
+    margin-top: 5%;
+}
+
+.card{
+    border: 1px solid #3E065E;
+    border-radius: 10px;
+    padding: 2%;
+    margin: 0% auto;
+    width: 90%;
+}
+
+.card h2{
+    color: #3E065E;
+    font-size: 2rem;
+    font-weight: bolder;
+}
+
+.card p{
+    color: black;
+    font-size: 0.9rem;
+    font-weight: bolder;
+}
+
+.card ul{
+    /* list-style: none; */
+    /* padding: 0; */
+    text-align: left;
+    margin-top: 7%;
+}
+
+.card ul li{
+    display: flex;
+    gap: 2%;
+    padding: 10px;
+    margin-left: -10%;
+    font-size: 0.8rem;
+    color: gray;
+}
+
+.card button{
+    background: #3E065E;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.5rem;
+    margin-top: 1rem;
+}
+
+.card button:hover{
+    background: white;
+    color: #3E065E;
+    border: 2px solid #3E065E;
+    transition: 0.5s;
+}
+
+.pricing-contact{
+    margin-bottom: 3%;
+}
+
+.pricing-contact h2{
+    color: #3E065E;
+    font-size: 1.5rem;
+    font-weight: bolder;
+    margin-bottom: 1%;
+}
+
+.pricing-contact p{
+    color: black;
+    font-size: 0.9rem;
+    font-weight: bolder;
+    margin-bottom: 2%;
+}
+
+.pricing-contact a{
+    background: #3E065E;
+    text-decoration: none;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.5rem;
+}
+
+@media screen and (max-width: 500px){
+    .pricing-cards{
+        grid-template-columns: repeat(1, 1fr);
+    }
+}

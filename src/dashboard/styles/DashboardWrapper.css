@@ -1,0 +1,31 @@
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100%;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 240px;
+  padding: 16px 16px 0 16px;
+  gap: 16px;
+}
+
+.content-area {
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: #f2f2f2;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  border-radius: 5px;
+}
