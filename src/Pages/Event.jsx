@@ -1,34 +1,89 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/Event.css";
 import Footer from "./Footer";
 import Exp1 from "../assets/images/Exp1.png";
 import Exp2 from "../assets/images/Exp2.png";
 import Exp3 from "../assets/images/Exp3.png";
-import { getEvents } from "../data/event";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 
 const Product = () => {
-  const [currentCategory, setCurrentCategory] = useState("paid");
-  const [eventsData, setEventsData] = useState(getEvents(currentCategory));
+  const [eventsData, setEventsData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLove = (index) => {
-    const updatedEvents = [...eventsData];
-    updatedEvents[index].loved = !updatedEvents[index].loved;
-    setEventsData(updatedEvents);
+  const fetchEvents = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch(
+        `https://whats-popping-server.onrender.com/events`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch events");
+      }
+      const data = await response.json();
+      setEventsData(data.map(event => ({
+        ...event,
+        liked: false,
+        showCommentForm: false,
+      })));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCommentSubmit = (index, comment) => {
-    const updatedEvents = [...eventsData];
-    updatedEvents[index].comments = updatedEvents[index].comments || [];
-    updatedEvents[index].comments.push(comment);
-    setEventsData(updatedEvents);
+  const handleLove = async (eventId, index) => {
+    try {
+      const response = await fetch(
+        `https://whats-popping-server.onrender.com/events/${eventId}/like`,
+        { method: "POST" }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to like event");
+      }
+      const updatedEvents = [...eventsData];
+      updatedEvents[index].liked = !updatedEvents[index].liked;
+      updatedEvents[index].likes.like_count += updatedEvents[index].liked ? 1 : -1;
+      setEventsData(updatedEvents);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  const handleCommentSubmit = async (eventId, index, comment) => {
+    try {
+      const response = await fetch(
+        `https://whats-popping-server.onrender.com/comments/${eventId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ comment }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to submit comment");
+      }
+      const updatedEvents = [...eventsData];
+      updatedEvents[index].comments.push(comment);
+      setEventsData(updatedEvents);
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   const toggleCommentForm = (index) => {
     const updatedEvents = [...eventsData];
-    updatedEvents[index].showCommentForm = !updatedEvents[index].showCommentForm; 
+    updatedEvents[index].showCommentForm = !updatedEvents[index].showCommentForm;
     setEventsData(updatedEvents);
   };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   return (
     <div>
@@ -49,16 +104,6 @@ const Product = () => {
                 placeholder="Type of Event"
               />
             </label>
-            <label htmlFor="category">
-              Categories <br />
-              <select id="category" name="category">
-                <option value="select">Select</option>
-                <option value="music">Music</option>
-                <option value="sports">Sports</option>
-                <option value="art">Art</option>
-                <option value="food">Food</option>
-              </select>
-            </label>
             <button>Search</button>
           </div>
         </div>
@@ -71,91 +116,61 @@ const Product = () => {
 
       <div className="event-list">
         <h1>Events</h1>
-        <div className="event-nav">
-          <span
-            className={currentCategory === "paid" ? "active" : ""}
-            onClick={() => {
-              setCurrentCategory("paid");
-              setEventsData(getEvents("paid"));
-            }}
-          >
-            Paid Events
-          </span>
-          <span
-            className={currentCategory === "free" ? "active" : ""}
-            onClick={() => {
-              setCurrentCategory("free");
-              setEventsData(getEvents("free"));
-            }}
-          >
-            Free Events
-          </span>
-          <span
-            className={currentCategory === "foryou" ? "active" : ""}
-            onClick={() => {
-              setCurrentCategory("foryou");
-              setEventsData(getEvents("foryou"));
-            }}
-          >
-            For You
-          </span>
-        </div>
         <div className="events">
-          {eventsData.map((event, index) => (
-            <div key={index} className="event">
-              <img src={event.image} alt="Event" />
-              <div className="event-details">
-                <h3>{event.title}</h3>
-                <p>{event.location}</p>
-                <p>{event.date}</p>
-                <div className="event-price">
-                  {currentCategory === "paid" && <p>$50</p>}
-                  <p>
-                    <strong>Get tickets</strong>
-                  </p>
-                </div>
-                <div className="like-comment-section">
-                  <button onClick={() => handleLove(index)}>
-                    {event.loved ? (
-                      <AiFillHeart style={{ color: "red" }} />
-                    ) : (
-                      <AiOutlineHeart />
-                    )}
-                  </button>
-                  <button onClick={() => toggleCommentForm(index)}>
-                    Comment
-                  </button>
-                  {event.showCommentForm && (
-                    <div className="comments">
-                      <h4>Comments:</h4>
-                      <ul>
-                        {event.comments &&
-                          event.comments.map((comment, commentIndex) => (
+          {loading && <p>Loading events...</p>}
+          {error && <p className="error">{error}</p>}
+          {!loading &&
+            !error &&
+            eventsData.map((event, index) => (
+              <div key={index} className="event">
+                <img src={event.event_image} alt="Event" />
+                <div className="event-details">
+                  <h3>{event.event_name}</h3>
+                  <p>{event.event_location}</p>
+                  <p>{event.event_date}</p>
+                  <p>{event.event_time}</p>
+                  <div className="like-comment-section">
+                    <button onClick={() => handleLove(event.id, index)}>
+                      {event.liked ? (
+                        <AiFillHeart style={{ color: "red" }} />
+                      ) : (
+                        <AiOutlineHeart />
+                      )}
+                    </button>
+                    <span>{event.likes.like_count} Likes</span>
+                    <button onClick={() => toggleCommentForm(index)}>
+                      Comment
+                    </button>
+                    {event.showCommentForm && (
+                      <div className="comments">
+                        <h4>Comments:</h4>
+                        <ul>
+                          {event.comments.map((comment, commentIndex) => (
                             <li key={commentIndex}>{comment}</li>
                           ))}
-                      </ul>
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          const comment = e.target.comment.value;
-                          handleCommentSubmit(index, comment);
-                          e.target.reset();
-                        }}
-                      >
-                        <input
-                          type="text"
-                          name="comment"
-                          placeholder="Add a comment"
-                          required
-                        />
-                        <button type="submit">Submit</button>
-                      </form>
-                    </div>
-                  )}
+                        </ul>
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            const comment = e.target.comment.value;
+                            handleCommentSubmit(event.id, index, comment);
+                            e.target.reset();
+                          }}
+                        >
+                          <input
+                            type="text"
+                            name="comment"
+                            placeholder="Add a comment"
+                            required
+                          />
+                          <button type="submit">Submit</button>
+                        </form>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
