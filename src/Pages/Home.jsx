@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import useBackground from "../hooks/useBackground";
 import "../styles/Home.css";
-import FAQ from "../commponents/Faq";
+// import FAQ from "../components/Faq";
+import Footer from "./Footer";
 import Profile from "../assets/images/profile.png";
 import Amico from "../assets/images/amico.png";
 import Bro from "../assets/images/bro.png";
@@ -18,63 +20,16 @@ import Payment from "../assets/images/icons/payment-02.png";
 import CustomerSupport from "../assets/images/icons/Vector (3).png";
 import Looking from "../assets/images/Frame 1000002753.png";
 import Complement from "../assets/images/Group 1.png";
-import Footer from "./Footer";
+
+const images = [
+  require("../assets/images/Prop1.png"),
+  require("../assets/images/Prop2.png"),
+  require("../assets/images/Prop3.png"),
+  require("../assets/images/Prop4.png"),
+];
 
 const Home = () => {
-  const [backgroundImage, setBackgroundImage] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const images = [
-    require("../assets/images/Prop1.png"),
-    require("../assets/images/Prop2.png"),
-    require("../assets/images/Prop3.png"),
-    require("../assets/images/Prop4.png"),
-    Amico,
-    Bro,
-    Profile,
-    Artboard,
-    ListSetting,
-    EmailMessage,
-    Share,
-    RSVP,
-    TimeManagement,
-    QRcode,
-    Ticket,
-    CustomerServices,
-    Analysis,
-    Payment,
-    CustomerSupport,
-    Looking,
-    Complement,
-  ];
-
-  useEffect(() => {
-    const loadImages = async () => {
-      const promises = images.map((image) => {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.src = image;
-          img.onload = resolve;
-          img.onerror = reject;
-        });
-      });
-
-      await Promise.all(promises);
-      setIsLoading(false);
-    };
-
-    loadImages();
-  }, [images]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      const interval = setInterval(() => {
-        setBackgroundImage((prev) => (prev + 1) % 4); 
-      }, 5000);
-
-      return () => clearInterval(interval);
-    }
-  }, [isLoading]);
+  const { backgroundImage, isLoading } = useBackground(images, 5000);
 
   if (isLoading) {
     return (
@@ -89,7 +44,7 @@ const Home = () => {
       <div className="about-us">
         <section
           className="about-banner"
-          style={{ backgroundImage: `url(${images[backgroundImage]})` }}
+          style={{ backgroundImage: `url(${backgroundImage})` }}
         >
           <h1>Navigate the Event Verse with Whatspopping</h1>
           <p>
@@ -104,53 +59,8 @@ const Home = () => {
 
         <hr />
 
-        {/* The rest of the component stays the same */}
         <section className="services">
           <h2>Do more with Whatspopping</h2>
-
-          <div className="each">
-            <div className="xc">
-              <h3>Plan Events</h3>
-              <p>
-                Create an unforgettable event experience from free to a paid or
-                invite-only event that enhances brand perception. At
-                Whatspopping, we make it easy for event organizers like you to
-                create, promote, and sell tickets to your event, creating a
-                memorable experience with the right tools and amazing customer
-                support.
-              </p>
-              <ul>
-                <li><img src={ListSetting} alt="" />Attendee Management</li>
-                <li><img src={Share} alt="" />Email Messaging</li>
-                <li><img src={EmailMessage} alt="" />SMS and WhatsApp Messaging</li>
-                <li><img src={RSVP} alt="" />Digital RSVP Forms</li>
-                <li><img src={TimeManagement} alt="" />Session and Attendee Management</li>
-                <li><img src={QRcode} alt="" />QR Code Creation</li>
-              </ul>
-            </div>
-            <img className="es" src={Amico} alt="" />
-            <img className="ex" src={Bro} alt="" />
-            <div className="xs">
-              <h3>Smooth and Secure Payments</h3>
-              <p>
-                Create an unforgettable event experience from free to a paid or
-                invite-only event that enhances brand perception. At
-                Whatspopping, we make it easy for event organizers like you to
-                create, promote, and sell tickets to your event, creating a
-                memorable experience with the right tools and amazing customer
-                support.
-              </p>
-              <ul>
-                <li><img src={Artboard} alt="" />Event Creation & Promotion</li>
-                <li><img src={Ticket} alt="" />Ticket Sales Management</li>
-                <li><img src={CustomerServices} alt="" />Customized Event Branding</li>
-                <li><img src={Analysis} alt="" />Advanced Analytics & Reporting</li>
-                <li><img src={Payment} alt="" />Seamless Payment Integration</li>
-                <li><img src={CustomerSupport} alt="" />Exceptional Customer Support</li>
-              </ul>
-            </div>
-          </div>
-          <br /><br />
           <div className="each">
             <div className="xc">
               <h3>Plan Events</h3>
@@ -284,16 +194,8 @@ const Home = () => {
             <img src={Complement} alt="" />
           </div>
         </section>
-
-        {/* <FAQ /> */}
-
-        <section className="newsletter">
-          <h1>Subscribe to our Newsletter</h1>
-          <p>Get daily updates on events into your inbox</p>
-          <button>Subscribe</button>
-        </section>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 };

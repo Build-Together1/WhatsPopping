@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
-import SignupBg from "../assets/images/signup-background.png";
 import "../styles/Login.css";
 
 const Login = () => {
@@ -11,6 +10,8 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,21 +26,17 @@ const Login = () => {
 
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
-        window.location.href = "/admin-dashboard";
+        navigate("/dashboard");
       } else {
         setError("Login failed. Please try again.");
       }
     } catch (error) {
       if (error.response) {
         setError(
-          `Error: ${
-            error.response.data.message || "An error occurred. Please try again."
-          }`
+          `Error: ${error.response.data.message || "An error occurred. Please try again."}`
         );
       } else if (error.request) {
-        setError(
-          "No response from the server. Please check your internet connection."
-        );
+        setError("No response from the server. Please check your internet connection.");
       } else {
         setError("An error occurred while setting up the request.");
       }
@@ -48,15 +45,13 @@ const Login = () => {
       setLoading(false);
     }
   };
-  
-  
+
   return (
     <div className="login">
       <div className="login-container">
         <div className="login-header">
           <h1>Welcome Back</h1>
           <p>Sign in to your WhatsPopping account</p>
-          
         </div>
 
         <div className="login-form">
@@ -72,6 +67,7 @@ const Login = () => {
                 value={formData.email_address}
                 onChange={handleChange}
                 placeholder="Enter your email address"
+                required 
               />
             </div>
             <div className="mb-3">
@@ -85,6 +81,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
+                required
               />
             </div>
 
@@ -114,10 +111,6 @@ const Login = () => {
             Don't have an account? <NavLink to="/signup">Sign Up</NavLink>
           </p>
         </div>
-      </div>
-
-      <div className="login-image">
-        <img src={SignupBg} alt="Signup Background" />
       </div>
     </div>
   );

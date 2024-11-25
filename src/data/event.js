@@ -1,5 +1,3 @@
-// src/data/events.js
-
 import Event1 from "../assets/images/Rectangle 57.png";
 import Event2 from "../assets/images/Rectangle 58.png";
 import Event3 from "../assets/images/Rectangle 59.png";

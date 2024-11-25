@@ -10,10 +10,9 @@ import Faq from "./Pages/Faq";
 import Blog from "./Pages/Blog";
 import Event from "./Pages/Event";
 import Error from "./Pages/Error";
-import SignUp from "./auth/SignUp";
-import Login from "./auth/Login";
 import ForgotPassword from "./auth/ForgotPassword";
 import Dashboard from "./Pages/Dashboard";
+import EventCreation from "./EventCreation/EventCreation";
 import Pricing from "./Pages/Pricing";
 import DashboardWrapper from './dashboard/DashboardWrapper';
 import Header from './dashboard/component/Header';
@@ -22,6 +21,9 @@ import AdminDashboard from "./dashboard/AdminDashboard";
 import EventManagement from "./dashboard/EventManagement";
 import AttendeeManagement from "./dashboard/AttendeeManagement";
 import Settings from "./dashboard/Settings";
+import AuthWrapper from "./auth/AuthWrapper";
+
+import "./App.css";
 
 
 function App() {
@@ -37,16 +39,16 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/event" element={<Event />} />
         <Route path="*" element={<Error />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/event-creation" element={<EventCreation />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/dashboard-wrapper" element={<DashboardWrapper />} />
         <Route path="/admin-dashboard" element={<DashboardWrapper><AdminDashboard /></DashboardWrapper>} />
         <Route path="/event-management" element={<DashboardWrapper><EventManagement /></DashboardWrapper>} />
         <Route path="/attendee-management" element={<DashboardWrapper><AttendeeManagement /></DashboardWrapper>} />
         <Route path="/settings" element={<DashboardWrapper><Settings /></DashboardWrapper>} />
+        <Route path="/auth" element={<AuthWrapper />} />
       </Routes>
     </Router>
   );

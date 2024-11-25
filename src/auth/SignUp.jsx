@@ -2,408 +2,160 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../styles/Signup.css";
 import { NavLink } from "react-router-dom";
-import SignupBg from "../assets/images/signup-background.png";
 import { Spinner } from "react-bootstrap";
 
 const SignUp = () => {
-  const [selectedForm, setSelectedForm] = useState("personal");
-  const [currentStep, setCurrentStep] = useState("form");
-  const [showPersonalPassword, setShowPersonalPassword] = useState(false);
-  const [showPersonalConfirmPassword, setShowPersonalConfirmPassword] =
-    useState(false);
-  const [showCorporatePassword, setShowCorporatePassword] = useState(false);
-  const [showCorporateConfirmPassword, setShowCorporateConfirmPassword] =
-    useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
+    name: "",
     email_address: "",
-    phone_number: "",
-    state: "",
-    country: "",
+    date_of_birth: "",
     password: "",
     confirm_password: "",
-    organization_name: "",
-    organization_description: "",
+    username: "",
+    profile_header_path: null,
+    profile_pic_path: null,
+    location: "",
+    website: "",
   });
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const handleFormToggle = (form) => {
-    setSelectedForm(form);
-  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmitForm = async () => {
-    setLoading(true);
-    const url =
-      selectedForm === "personal"
-        ? "https://whats-popping-server.onrender.com/create-individual-account"
-        : "https://whats-popping-server.onrender.com/create-corporate-account";
-
-    try {
-      const response = await axios.post(url, formData);
-      if (response.status === 201) {
-        const otpUrl =
-          selectedForm === "personal"
-            ? "https://whats-popping-server.onrender.com/individual-account-generate-otp"
-            : "https://whats-popping-server.onrender.com/corporate-account-generate-otp";
-        
-        await axios.post(otpUrl, { email_address: formData.email_address });
-        setOtpSent(true);
-        setCurrentStep("otp");
-      } else {
-        setError("Signup failed. Please try again.");
-      }
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status === 409) {
-          setError(
-            "Conflict: It seems there is an issue with the data you provided."
-          );
-        } else {
-          setError(
-            `Error: ${
-              error.response.data.message ||
-              "An error occurred. Please try again."
-            }`
-          );
-        }
-      } else if (error.request) {
-        setError(
-          "No response from the server. Please check your internet connection."
-        );
-      } else {
-        setError("An error occurred while setting up the request.");
-      }
-      console.error("Error signing up:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.files[0] });
   };
 
-  const handleSubmitOtp = async () => {
-    try {
-      const otpUrl =
-        selectedForm === "personal"
-          ? "https://whats-popping-server.onrender.com/individual-account-verify-email"
-          : "https://whats-popping-server.onrender.com/corporate-account-verify-email";
+  const handleNextStep = () => setCurrentStep((prev) => prev + 1);
+  const handlePrevStep = () => setCurrentStep((prev) => prev - 1);
 
-      const response = await axios.post(otpUrl, {
+  // const handleSubmitForm = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const formDataToSubmit = new FormData();
+  //     formDataToSubmit.append("name", formData.name);
+  //     formDataToSubmit.append("email_address", formData.email_address);
+  //     formDataToSubmit.append("date_of_birth", formData.date_of_birth);
+  //     formDataToSubmit.append("password", formData.password);
+  //     formDataToSubmit.append("confirm_password", formData.confirm_password);
+  //     formDataToSubmit.append("username", formData.username);
+  //     if (formData.profile_header_path) {
+  //       formDataToSubmit.append(
+  //         "profile_header_path",
+  //         formData.profile_header_path
+  //       );
+  //     }
+  //     if (formData.profile_pic_path) {
+  //       formDataToSubmit.append("profile_pic_path", formData.profile_pic_path);
+  //     }
+  //     formDataToSubmit.append("location", formData.location);
+  //     formDataToSubmit.append("website", formData.website);
+
+  //     // Uncomment for API integration
+  //     /*
+  //     const response = await axios.post(
+  //       "https://whats-popping-server.onrender.com/users",
+  //       formDataToSubmit,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
+
+  //     if (response.data.success) {
+  //       handleNextStep();
+  //     } else {
+  //       setError(response.data.message || "Something went wrong");
+  //     }
+  //     */
+  //   } catch (error) {
+  //     setError(error.response?.data?.message || "An error occurred");
+  //   }
+  //   setLoading(false);
+  // };
+
+  const handleVerifyEmail = async () => {
+    try {
+      const otpData = {
         email_address: formData.email_address,
         otp: otp,
-      });
-      if (response.status === 200) {
-        setCurrentStep("success");
+      };
+
+      // Uncomment for API integration
+      /*
+      const response = await axios.post(
+        "https://whats-popping-server.onrender.com/verify-email",
+        otpData
+      );
+
+      if (response.data.success) {
+        handleNextStep();
       } else {
-        setError("Invalid OTP. Please try again.");
+        setError(response.data.message || "OTP verification failed");
       }
+      */
     } catch (error) {
-      setError("Error verifying OTP. Please try again.");
-      console.error("Error verifying OTP:", error);
+      setError(
+        error.response?.data?.message ||
+          "An error occurred during OTP verification"
+      );
     }
   };
 
   return (
-    <div className="form-all">
-      <div className="form-container">
-        {currentStep !== "otp" && currentStep !== "success" && (
-          <div className="form-header">
-            <h1>Sign Up</h1>
-            <p>Enter details below to create your account</p>
-            {error && <p className="error-message">{error}</p>}
-          </div>
-        )}
+    <div className="signup">
+      <div className="signup-container">
+        <div className="signup-header">
+          <h1>Create Account</h1>
+          <p>Step {currentStep} of 6</p>
+          {error && <p className="error-message">{error}</p>}
+        </div>
 
-        {currentStep !== "otp" && currentStep !== "success" && (
-          <div className="navigation-toggle">
-            <div
-              id="personal"
-              className={selectedForm === "personal" ? "active" : ""}
-              onClick={() => handleFormToggle("personal")}
-            >
-              Personal
-            </div>
-            <div
-              id="corporate"
-              className={selectedForm === "corporate" ? "active" : ""}
-              onClick={() => handleFormToggle("corporate")}
-            >
-              Corporate
-            </div>
-          </div>
-        )}
-
-        <div className="form-content">
-          {currentStep === "form" && (
-            <>
-              {selectedForm === "personal" && (
-                <form className="personal">
-                  <div className="fm">
-                    <label htmlFor="first_name">
-                      First Name <br />
-                      <input
-                        type="text"
-                        id="first_name"
-                        name="first_name"
-                        placeholder="Enter first name"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="last_name">
-                      Last Name <br />
-                      <input
-                        type="text"
-                        id="last_name"
-                        name="last_name"
-                        placeholder="Enter last name"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="email_address">
-                      Email Address <br />
-                      <input
-                        type="email"
-                        id="email_address"
-                        name="email_address"
-                        placeholder="johnsmith@gmail.com"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="phone_number">
-                      Phone Number <br />
-                      <input
-                        type="tel"
-                        id="phone_number"
-                        name="phone_number"
-                        placeholder="Enter phone number"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="state">
-                      State <br />
-                      <input
-                        type="text"
-                        id="state"
-                        name="state"
-                        placeholder="Enter state"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="country">
-                      Country <br />
-                      <input
-                        type="text"
-                        id="country"
-                        name="country"
-                        placeholder="Enter country"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="password">
-                      Create Password <br />
-                      <div className="password-container">
-                        <input
-                          type={showPersonalPassword ? "text" : "password"}
-                          id="password"
-                          name="password"
-                          placeholder="Enter password"
-                          onChange={handleChange}
-                        />
-                        <input
-                          type="checkbox"
-                          checked={showPersonalPassword}
-                          onChange={() =>
-                            setShowPersonalPassword((prev) => !prev)
-                          }
-                        />
-                      </div>
-                    </label>
-                    <label htmlFor="confirm_password">
-                      Confirm Password <br />
-                      <div className="password-container">
-                        <input
-                          type={
-                            showPersonalConfirmPassword ? "text" : "password"
-                          }
-                          id="confirm_password"
-                          name="confirm_password"
-                          placeholder="Confirm password"
-                          onChange={handleChange}
-                        />
-                        <input
-                          type="checkbox"
-                          checked={showPersonalConfirmPassword}
-                          onChange={() =>
-                            setShowPersonalConfirmPassword((prev) => !prev)
-                          }
-                        />
-                      </div>
-                    </label>
-                  </div>
-                  <button type="button" onClick={handleSubmitForm}>
-                    {loading ? (
-                      <Spinner
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      "Create Account"
-                    )}
-                  </button>
-                </form>
-              )}
-
-              {selectedForm === "corporate" && (
-                <form className="corporate">
-                  <div className="fmm">
-                    <label htmlFor="first_name">
-                      First Name <br />
-                      <input
-                        type="text"
-                        id="first_name"
-                        name="first_name"
-                        placeholder="Enter first name"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="last_name">
-                      Last Name <br />
-                      <input
-                        type="text"
-                        id="last_name"
-                        name="last_name"
-                        placeholder="Enter last name"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="organization_name">
-                      Organization Name <br />
-                      <input
-                        type="text"
-                        id="organization_name"
-                        name="organization_name"
-                        placeholder="Enter your organization name"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="organization_description">
-                      Organization Description <br />
-                      <textarea
-                        id="organization_description"
-                        name="organization_description"
-                        placeholder="Enter organization description"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="email_address">
-                      Email Address <br />
-                      <input
-                        type="email"
-                        id="email_address"
-                        name="email_address"
-                        placeholder="johnsmith@gmail.com"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="phone_number">
-                      Phone Number <br />
-                      <input
-                        type="tel"
-                        id="phone_number"
-                        name="phone_number"
-                        placeholder="Enter phone number"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="state">
-                      State <br />
-                      <input
-                        type="text"
-                        id="state"
-                        name="state"
-                        placeholder="Enter state"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="country">
-                      Country <br />
-                      <input
-                        type="text"
-                        id="country"
-                        name="country"
-                        placeholder="Enter country"
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label htmlFor="password">
-                      Create Password <br />
-                      <div className="password-container">
-                        <input
-                          type={showCorporatePassword ? "text" : "password"}
-                          id="password"
-                          name="password"
-                          placeholder="Enter password"
-                          onChange={handleChange}
-                        />
-                        <input
-                          type="checkbox"
-                          checked={showCorporatePassword}
-                          onChange={() =>
-                            setShowCorporatePassword((prev) => !prev)
-                          }
-                        />
-                      </div>
-                    </label>
-                    <label htmlFor="confirm_password">
-                      Confirm Password <br />
-                      <div className="password-container">
-                        <input
-                          type={
-                            showCorporateConfirmPassword ? "text" : "password"
-                          }
-                          id="confirm_password"
-                          name="confirm_password"
-                          placeholder="Confirm password"
-                          onChange={handleChange}
-                        />
-                        <input
-                          type="checkbox"
-                          checked={showCorporateConfirmPassword}
-                          onChange={() =>
-                            setShowCorporateConfirmPassword((prev) => !prev)
-                          }
-                        />
-                      </div>
-                    </label>
-                  </div>
-                  <button type="button" onClick={handleSubmitForm}>
-                    {loading ? (
-                      <Spinner
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      "Create Account"
-                    )}
-                  </button>
-                </form>
-              )}
-            </>
+        <div className="signup-form">
+          {currentStep === 1 && (
+            <form>
+              <div className="form-fields">
+                <div className="form-group">
+                  <label>Full Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter full name"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <input
+                    type="email"
+                    name="email_address"
+                    placeholder="Enter email"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Date of Birth</label>
+                  <input
+                    type="date"
+                    name="date_of_birth"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <button type="button" onClick={handleNextStep}>
+                Next
+              </button>
+            </form>
           )}
 
-          {currentStep === "otp" && (
+          {currentStep === 2 && (
             <div className="otp-verification">
-              <h2>OTP Verification</h2>
+              <h2>Verify Your Email</h2>
               <p>Enter the OTP sent to your email address.</p>
               <input
                 type="text"
@@ -411,26 +163,129 @@ const SignUp = () => {
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="Enter OTP"
               />
-              <button type="button" onClick={handleSubmitOtp}>
-                Verify OTP
+              <button type="button" onClick={handleNextStep}>
+                Verify
               </button>
-              {error && <p className="error-message">{error}</p>}
             </div>
           )}
 
-          {currentStep === "success" && (
-            <div className="success-message">
-              <h2>Account Created Successfully!</h2>
-              <p>You can now log in to your account.</p>
-              <NavLink to="/">
-                <button type="button">Go to home</button>
-              </NavLink>
-            </div>
+          {currentStep === 3 && (
+            <form>
+              <div className="form-fields">
+                <div className="form-group">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter password"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Confirm Password</label>
+                  <input
+                    type="password"
+                    name="confirm_password"
+                    placeholder="Confirm password"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <button type="button" onClick={handleNextStep}>
+                Next
+              </button>
+            </form>
+          )}
+
+          {currentStep === 4 && (
+            <form>
+              <div className="form-group">
+                <label>Upload Profile Picture (Optional)</label>
+                <input
+                  type="file"
+                  name="profile_pic_path"
+                  onChange={handleFileChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Upload Cover Photo (Optional)</label>
+                <input
+                  type="file"
+                  name="profile_header_path"
+                  onChange={handleFileChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Location (Optional)</label>
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="Enter location"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Website (Optional)</label>
+                <input
+                  type="text"
+                  name="website"
+                  placeholder="Enter website"
+                  onChange={handleChange}
+                />
+              </div>
+              <button type="button" onClick={handleNextStep}>
+                Skip/Next
+              </button>
+            </form>
+          )}
+
+          {currentStep === 5 && (
+            <form>
+              <div className="form-group">
+                <label>Select Events You Want to See Frequently</label>
+                <select
+                  multiple
+                  name="preferred_events"
+                  onChange={handleChange}
+                >
+                  <option value="concerts">Concerts</option>
+                  <option value="sports">Sports</option>
+                  <option value="theater">Theater</option>
+                  <option value="workshops">Workshops</option>
+                </select>
+              </div>
+              <button type="button" onClick={handleNextStep}>
+                Next
+              </button>
+            </form>
+          )}
+
+          {currentStep === 6 && (
+            <form>
+              <div className="form-group">
+                <label>Set Profile Name</label>
+                <input
+                  type="text"
+                  name="profile_name"
+                  placeholder="Enter profile name"
+                  onChange={handleChange}
+                />
+              </div>
+              <button type="submit">
+                {loading ? (
+                  <Spinner animation="border" size="sm" role="status" />
+                ) : (
+                  "Sign Up"
+                )}
+              </button>
+            </form>
           )}
         </div>
-      </div>
-      <div className="form-image">
-        <img src={SignupBg} alt="Signup Background" />
+        {currentStep > 1 && (
+          <button className="back-btn" onClick={handlePrevStep}>
+            Back
+          </button>
+        )}
       </div>
     </div>
   );

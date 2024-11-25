@@ -19,11 +19,13 @@ const Topnav = () => {
     "/login", 
     "/forgot-password", 
     "/dashboard-wrapper", 
-    "/dashboard",
+    // "/dashboard",
+    "/event-creation",
     "/admin-dashboard",
     "/event-management",
     "/attendee-management",
     "/settings",
+    "/auth",
   ].includes(location.pathname);
 
   if (isAuthOrDashboardPage) {
@@ -54,10 +56,10 @@ const Topnav = () => {
             </Nav>
           </div>
           <Nav className="ms-auto nav-btns">
-            <NavLink className="btn btn-success" id="btn1" to="/signup">
+            <NavLink className="btn btn-success" id="btn1" to="/auth">
               Sign Up
             </NavLink>
-            <NavLink className="btn btn-primary" id="btn2" to="/login">
+            <NavLink className="btn btn-primary" id="btn2" to="/auth">
               Login
             </NavLink>
           </Nav>

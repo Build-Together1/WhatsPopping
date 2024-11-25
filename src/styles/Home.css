@@ -84,10 +84,25 @@ p {
 .btn-a {
   background-color: #3e065e;
   color: white;
+  width: 30%;
 }
+
+.btn-a:hover {
+  background-color: #ebc9fe;
+  color: #3e065e;
+  transition: 0.5s;
+}
+
 .btn-b {
   background-color: #ebc9fe;
   color: #3e065e;
+  width: 30%;
+}
+
+.btn-b:hover {
+  background-color: #3e065e;
+  color: white;
+  transition: 0.5s;
 }
 
 hr {
