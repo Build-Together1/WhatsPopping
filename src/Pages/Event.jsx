@@ -16,7 +16,8 @@ const Product = () => {
     setError("");
     try {
       const response = await fetch(
-        `https://whats-popping-server.onrender.com/events`
+        `https://whats-popping-server.onrender.com/events/`,
+        { method: "GET" }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch events");
@@ -34,10 +35,10 @@ const Product = () => {
     }
   };
 
-  const handleLove = async (eventId, index) => {
+  const handleLove = async (event_id, index) => {
     try {
       const response = await fetch(
-        `https://whats-popping-server.onrender.com/events/${eventId}/like`,
+        `https://whats-popping-server.onrender.com/events/${event_id}/like`,
         { method: "POST" }
       );
       if (!response.ok) {
@@ -52,10 +53,10 @@ const Product = () => {
     }
   };
 
-  const handleCommentSubmit = async (eventId, index, comment) => {
+  const handleCommentSubmit = async (event_id, index, comment) => {
     try {
       const response = await fetch(
-        `https://whats-popping-server.onrender.com/comments/${eventId}`,
+        `https://whats-popping-server.onrender.com/comments/${event_id}`,
         {
           method: "POST",
           headers: {

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { login } from "../services/apiRequest";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import "../styles/Login.css";
+import { UserContext } from "../context/UserContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +12,9 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const { loginUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,20 +24,24 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    setError("");
+  
     try {
-      const response = await axios.post("https://whats-popping-server.onrender.com/account/login", formData);
-
-      if (response.status === 200) {
-        localStorage.setItem("token", response.data.token);
+      const response = await login(formData);
+  
+      if (response && response.status === 200) {
+        loginUser(response.data.token, response.data.id);
+        console.log(response.data.token, response.data.id);
         navigate("/dashboard");
+    } else if (response) {
+        setError(response.data?.message || "Login failed. Please try again.");
       } else {
-        setError("Login failed. Please try again.");
+        setError("Unexpected error occurred. Please try again.");
       }
     } catch (error) {
       if (error.response) {
         setError(
-          `Error: ${error.response.data.message || "An error occurred. Please try again."}`
+          `Error: ${error.response.data?.message || "An error occurred. Please try again."}`
         );
       } else if (error.request) {
         setError("No response from the server. Please check your internet connection.");
@@ -45,6 +53,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="login">
@@ -67,29 +76,40 @@ const Login = () => {
                 value={formData.email_address}
                 onChange={handleChange}
                 placeholder="Enter your email address"
-                required 
+                required
               />
             </div>
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
                 Password
               </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                required
-              />
+              <div className="password-input-container">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                </button>
+              </div>
             </div>
 
             <button type="submit" className="buttonv">
               {loading ? "Logging in..." : "Login"}
             </button>
 
-            <p className="error-message">{error && <strong className="n">{error}</strong>}</p>
+            <p className="error-message">
+              {error && <strong className="n">{error}</strong>}
+            </p>
 
             <p className="forget-password">
               <NavLink to="/forgot-password">Forgot Password?</NavLink>
@@ -108,7 +128,7 @@ const Login = () => {
 
         <div className="signup-option">
           <p>
-            Don't have an account? <NavLink to="/signup">Sign Up</NavLink>
+            Don't have an account? <NavLink to="/auth">Sign Up</NavLink>
           </p>
         </div>
       </div>

@@ -22,13 +22,15 @@ import EventManagement from "./dashboard/EventManagement";
 import AttendeeManagement from "./dashboard/AttendeeManagement";
 import Settings from "./dashboard/Settings";
 import AuthWrapper from "./auth/AuthWrapper";
+import { UserProvider } from "./context/UserContext";
 
 import "./App.css";
 
 
 function App() {
   return (
-    <Router>
+    <UserProvider>
+      <Router>
       <Topnav />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -51,6 +53,7 @@ function App() {
         <Route path="/auth" element={<AuthWrapper />} />
       </Routes>
     </Router>
+    </UserProvider>
   );
 }
 

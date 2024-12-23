@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useContext } from "react";
 import "../styles/Signup.css";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
+import { createUser, verifyEmail } from "../services/apiRequest";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { UserContext } from "../context/UserContext";
 
 const SignUp = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email_address: "",
@@ -13,98 +16,91 @@ const SignUp = () => {
     password: "",
     confirm_password: "",
     username: "",
-    profile_header_path: null,
-    profile_pic_path: null,
+    profile_header_path: "",
+    profile_pic_path: "",
     location: "",
     website: "",
   });
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedEvents, setSelectedEvents] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const { loginUser } = useContext(UserContext);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleFileChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, [e.target.name]: file });
+    }
   };
 
   const handleNextStep = () => setCurrentStep((prev) => prev + 1);
   const handlePrevStep = () => setCurrentStep((prev) => prev - 1);
 
-  // const handleSubmitForm = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const formDataToSubmit = new FormData();
-  //     formDataToSubmit.append("name", formData.name);
-  //     formDataToSubmit.append("email_address", formData.email_address);
-  //     formDataToSubmit.append("date_of_birth", formData.date_of_birth);
-  //     formDataToSubmit.append("password", formData.password);
-  //     formDataToSubmit.append("confirm_password", formData.confirm_password);
-  //     formDataToSubmit.append("username", formData.username);
-  //     if (formData.profile_header_path) {
-  //       formDataToSubmit.append(
-  //         "profile_header_path",
-  //         formData.profile_header_path
-  //       );
-  //     }
-  //     if (formData.profile_pic_path) {
-  //       formDataToSubmit.append("profile_pic_path", formData.profile_pic_path);
-  //     }
-  //     formDataToSubmit.append("location", formData.location);
-  //     formDataToSubmit.append("website", formData.website);
+  const handleSelect = (event) => {
+    const value = event.target.value;
+    if (!selectedEvents.includes(value)) {
+      setSelectedEvents([...selectedEvents, value]);
+    }
+  };
 
-  //     // Uncomment for API integration
-  //     /*
-  //     const response = await axios.post(
-  //       "https://whats-popping-server.onrender.com/users",
-  //       formDataToSubmit,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       }
-  //     );
-
-  //     if (response.data.success) {
-  //       handleNextStep();
-  //     } else {
-  //       setError(response.data.message || "Something went wrong");
-  //     }
-  //     */
-  //   } catch (error) {
-  //     setError(error.response?.data?.message || "An error occurred");
-  //   }
-  //   setLoading(false);
-  // };
+  const handleRemove = (eventToRemove) => {
+    setSelectedEvents((prev) =>
+      prev.filter((event) => event !== eventToRemove)
+    );
+  };
 
   const handleVerifyEmail = async () => {
+    setLoading(true);
     try {
-      const otpData = {
+      const response = await verifyEmail({
         email_address: formData.email_address,
-        otp: otp,
+        otp,
+      });
+      if (response.status === 200) {
+        // loginUser(response.data.token, response.data.id);
+        navigate("/dashboard");
+      } else {
+        setError(response.data.message || "Failed to verify email");
+      }
+    } catch (error) {
+      setError("An error occurred during email verification");
+    }
+    setLoading(false);
+  };
+
+  const handleSubmitForm = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        ...formData,
+        profile_header_path:
+          formData.profile_header_path.name || formData.profile_header_path,
+        profile_pic_path:
+          formData.profile_pic_path.name || formData.profile_pic_path,
       };
+      const response = await createUser(payload);
 
-      // Uncomment for API integration
-      /*
-      const response = await axios.post(
-        "https://whats-popping-server.onrender.com/verify-email",
-        otpData
-      );
-
-      if (response.data.success) {
+      if (response.status === 201) {
+        loginUser(response.data.token, response.data.id);
         handleNextStep();
       } else {
-        setError(response.data.message || "OTP verification failed");
+        setError(response.data.message || "Failed to create account");
       }
-      */
     } catch (error) {
       setError(
         error.response?.data?.message ||
-          "An error occurred during OTP verification"
+          "An error occurred during account creation"
       );
     }
+    setLoading(false);
   };
 
   return (
@@ -147,57 +143,67 @@ const SignUp = () => {
                   />
                 </div>
               </div>
-              <button type="button" onClick={handleNextStep}>
+              <button
+                className="pri-btn"
+                type="button"
+                onClick={handleNextStep}
+              >
                 Next
               </button>
             </form>
           )}
 
           {currentStep === 2 && (
-            <div className="otp-verification">
-              <h2>Verify Your Email</h2>
-              <p>Enter the OTP sent to your email address.</p>
-              <input
-                type="text"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                placeholder="Enter OTP"
-              />
-              <button type="button" onClick={handleNextStep}>
-                Verify
-              </button>
-            </div>
-          )}
-
-          {currentStep === 3 && (
             <form>
               <div className="form-fields">
                 <div className="form-group">
                   <label>Password</label>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Enter password"
                     onChange={handleChange}
                   />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                  </button>
                 </div>
                 <div className="form-group">
                   <label>Confirm Password</label>
                   <input
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirm_password"
                     placeholder="Confirm password"
                     onChange={handleChange}
                   />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <AiFillEyeInvisible />
+                    ) : (
+                      <AiFillEye />
+                    )}
+                  </button>
                 </div>
               </div>
-              <button type="button" onClick={handleNextStep}>
+              <button
+                className="pri-btn"
+                type="button"
+                onClick={handleNextStep}
+              >
                 Next
               </button>
             </form>
           )}
 
-          {currentStep === 4 && (
+          {currentStep === 3 && (
             <form>
               <div className="form-group">
                 <label>Upload Profile Picture (Optional)</label>
@@ -233,8 +239,43 @@ const SignUp = () => {
                   onChange={handleChange}
                 />
               </div>
-              <button type="button" onClick={handleNextStep}>
+              <button
+                className="pri-btn"
+                type="button"
+                onClick={handleNextStep}
+              >
                 Skip/Next
+              </button>
+            </form>
+          )}
+
+          {currentStep === 4 && (
+            <form>
+              <div className="form-group">
+                <label>Select Events You Want to See Frequently</label>
+                <div className="selected-events">
+                  {selectedEvents.map((event) => (
+                    <span key={event} onClick={() => handleRemove(event)}>
+                      {event} &times;
+                    </span>
+                  ))}
+                </div>
+                <select name="preferred_events" onChange={handleSelect}>
+                  <option value="" disabled selected>
+                    Choose an event
+                  </option>
+                  <option value="concerts">Concerts</option>
+                  <option value="sports">Sports</option>
+                  <option value="theater">Theater</option>
+                  <option value="workshops">Workshops</option>
+                </select>
+              </div>
+              <button
+                className="pri-btn"
+                type="button"
+                onClick={handleNextStep}
+              >
+                Next
               </button>
             </form>
           )}
@@ -242,43 +283,44 @@ const SignUp = () => {
           {currentStep === 5 && (
             <form>
               <div className="form-group">
-                <label>Select Events You Want to See Frequently</label>
-                <select
-                  multiple
-                  name="preferred_events"
-                  onChange={handleChange}
-                >
-                  <option value="concerts">Concerts</option>
-                  <option value="sports">Sports</option>
-                  <option value="theater">Theater</option>
-                  <option value="workshops">Workshops</option>
-                </select>
-              </div>
-              <button type="button" onClick={handleNextStep}>
-                Next
-              </button>
-            </form>
-          )}
-
-          {currentStep === 6 && (
-            <form>
-              <div className="form-group">
                 <label>Set Profile Name</label>
                 <input
                   type="text"
-                  name="profile_name"
+                  name="username"
                   placeholder="Enter profile name"
                   onChange={handleChange}
                 />
               </div>
-              <button type="submit">
-                {loading ? (
-                  <Spinner animation="border" size="sm" role="status" />
-                ) : (
-                  "Sign Up"
-                )}
+              <button
+                className="pri-btn"
+                type="button"
+                onClick={handleSubmitForm}
+              >
+                {loading ? <Spinner animation="border" size="sm" /> : "Sign Up"}
               </button>
+              <p className="error-message">{error}</p>
             </form>
+          )}
+
+          {currentStep === 6 && (
+            <div className="otp-verification">
+              <h2>Verify Your Email</h2>
+              <p>An email has been sent to {formData.email_address}.</p>
+              <p>Enter the OTP sent to your email to verify your account.</p>
+              <input
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="Enter OTP"
+              />
+              <button
+                className="pri-btn"
+                type="button"
+                onClick={handleVerifyEmail}
+              >
+                {loading ? <Spinner animation="border" size="sm" /> : "Verify"}
+              </button>
+            </div>
           )}
         </div>
         {currentStep > 1 && (

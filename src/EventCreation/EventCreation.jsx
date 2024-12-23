@@ -1,24 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
-import SignupBg from "../assets/images/signup-background.png"; 
+import SignupBg from "../assets/images/signup-background.png";
+import { UserContext } from "../context/UserContext";
 import "./EventCreation.css";
 
 const EventCreation = () => {
   const [formData, setFormData] = useState({
+    event_image: "",
     event_name: "",
-    date: "",
-    time: "",
-    location: "",
-    description: "",
+    event_date: "",
+    event_time: "",
+    event_location: "",
+    event_description: "",
+    event_category: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { user } = useContext(UserContext); // Access the user context
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, event_image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -26,24 +42,38 @@ const EventCreation = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://whats-popping-server.onrender.com/events", formData);
+      if (!user?.token) {
+        setError("User is not authenticated. Please log in first.");
+        setLoading(false);
+        return;
+      }
+
+      console.log("Using token:", user.token); // Debugging token
+      const response = await axios.post(
+        "https://whats-popping-server.onrender.com/events/",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
 
       if (response.status === 201) {
-        navigate("/admin-dashboard");
+        navigate("/event");
       } else {
         setError("Event creation failed. Please try again.");
       }
     } catch (error) {
+      console.error("Error creating event:", error);
       if (error.response) {
-        setError(
-          `Error: ${error.response.data.message || "An error occurred. Please try again."}`
-        );
+        console.error("Error response data:", error.response.data);
+        setError(error.response.data.message || "Authorization failed.");
       } else if (error.request) {
         setError("No response from the server. Please check your internet connection.");
       } else {
         setError("An error occurred while setting up the request.");
       }
-      console.error("Error creating event:", error);
     } finally {
       setLoading(false);
     }
@@ -60,6 +90,20 @@ const EventCreation = () => {
         <div className="event-creation-form">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
+              <label htmlFor="event_image" className="form-label">
+                Event Image
+              </label>
+              <input
+                type="file"
+                id="event_image"
+                name="event_image"
+                accept="image/*"
+                onChange={handleImageChange}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
               <label htmlFor="event_name" className="form-label">
                 Event Name
               </label>
@@ -70,62 +114,87 @@ const EventCreation = () => {
                 value={formData.event_name}
                 onChange={handleChange}
                 placeholder="Enter event name"
-                required 
+                required
               />
             </div>
+
             <div className="mb-3">
-              <label htmlFor="date" className="form-label">
+              <label htmlFor="event_date" className="form-label">
                 Date
               </label>
               <input
                 type="date"
-                id="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                required 
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="time" className="form-label">
-                Time
-              </label>
-              <input
-                type="time"
-                id="time"
-                name="time"
-                value={formData.time}
+                id="event_date"
+                name="event_date"
+                value={formData.event_date}
                 onChange={handleChange}
                 required
               />
             </div>
+
             <div className="mb-3">
-              <label htmlFor="location" className="form-label">
+              <label htmlFor="event_time" className="form-label">
+                Time
+              </label>
+              <input
+                type="time"
+                id="event_time"
+                name="event_time"
+                value={formData.event_time}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="event_location" className="form-label">
                 Location
               </label>
               <input
                 type="text"
-                id="location"
-                name="location"
-                value={formData.location}
+                id="event_location"
+                name="event_location"
+                value={formData.event_location}
                 onChange={handleChange}
                 placeholder="Enter event location"
-                required 
+                required
               />
             </div>
+
             <div className="mb-3">
-              <label htmlFor="description" className="form-label">
+              <label htmlFor="event_description" className="form-label">
                 Description
               </label>
               <textarea
-                id="description"
-                name="description"
-                value={formData.description}
+                id="event_description"
+                name="event_description"
+                value={formData.event_description}
                 onChange={handleChange}
                 placeholder="Enter event description"
                 rows="4"
-                required 
+                required
               />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="event_category" className="form-label">
+                Category
+              </label>
+              <select
+                id="event_category"
+                name="event_category"
+                value={formData.event_category}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select event category</option>
+                <option value="music">Music</option>
+                <option value="food">Food</option>
+                <option value="sports">Sports</option>
+                <option value="technology">Technology</option>
+                <option value="fashion">Fashion</option>
+                <option value="arts">Arts</option>
+              </select>
             </div>
 
             <button type="submit" className="buttonv">

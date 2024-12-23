@@ -1,36 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../styles/Dashboard.css";
-import Profilepic from "../assets/images/icons/icons8-avatar-96.png";
-import CoverPhoto from "../assets/images/cover-photo.png";
+import { getUserDetails } from "../services/apiRequest";
 import { getEvents } from "../data/event";
-// import { NavLink } from "react-router-dom";
+import { UserContext } from "../context/UserContext"; 
 
 const Dashboard = () => {
-  const userDetails = {
-    name: "Muhammed Badmus",
-    email: "muhammed@example.com",
-    profilePic: Profilepic,
-    coverPhoto: CoverPhoto,
-  };
-
+  const { user } = useContext(UserContext); 
+  const [userDetails, setUserDetails] = useState(null);
   const [currentCategory, setCurrentCategory] = useState("paid");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      if (!user.userId || !user.token) {
+        console.error("User is not authenticated. Please log in.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await getUserDetails(user.userId);
+        if (response && response.status === 200) {
+          setUserDetails(response.data);
+        } else {
+          console.error("Failed to fetch user details:", response?.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, [user.userId, user.token]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!userDetails) {
+    return <div>Error loading user details.</div>;
+  }
 
   return (
     <div className="responsive-dashboard">
       <div
         className="cover-photo"
-        style={{ backgroundImage: `url(${userDetails.coverPhoto})` }}
+        style={{ backgroundImage: `url(${userDetails.coverPhoto || ""})` }}
       >
         <div className="profile-info">
           <img
-            src={userDetails.profilePic}
+            src={userDetails.profilePic || ""}
             alt="Profile"
             className="profile-pic"
           />
           <div className="user-info">
             <div>
               <h2>{userDetails.name}</h2>
-              <p>{userDetails.email}</p>
+              <p>{userDetails.email_address}</p>
             </div>
             <div>
               <button>Edit Profile</button>

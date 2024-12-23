@@ -26,7 +26,7 @@ body {
 }
 
 .login-header h1 {
-  color: black;
+  color: purple;
   font-size: 2rem;
   font-weight: bolder;
   padding-bottom: 5px;
@@ -60,6 +60,31 @@ body {
   border-radius: 5px;
 }
 
+.password-input-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 0%;
+}
+
+.password-input-container input {
+  width: 95%;
+  padding: 10px;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+}
+
+.password-input-container button{
+  width: 7%;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  color: black;
+  font-size: 1.5rem;
+}
+
 .buttonv {
   width: 100%;
   padding: 10px 205px;
@@ -91,12 +116,13 @@ body {
 .login-options {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   margin-top: 20px;
 }
 
 .login-options button {
   background-color: white;
-  padding: 7px 10px;
+  padding: 5px 8px;
   border: 1px solid black;
   border-radius: 5px;
   color: black;
