@@ -4,26 +4,26 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({
-    token: localStorage.getItem("token") || null,
-    userId: localStorage.getItem("user_id") || null,
+    id: localStorage.getItem("user_id") || null,
+    token: localStorage.getItem("token") || null, 
   });
 
-  const loginUser = (token, userId) => {
-    localStorage.setItem("token", token);
+  const loginUser = (userId, token) => {
     localStorage.setItem("user_id", userId);
-    setUser({ token, userId });
+    localStorage.setItem("token", token); 
+    setUser({ id: userId, token: token }); 
   };
 
   const logoutUser = () => {
-    localStorage.removeItem("token");
     localStorage.removeItem("user_id");
-    setUser({ token: null, userId: null });
+    localStorage.removeItem("token");
+    setUser({ id: null, token: null });
   };
 
   useEffect(() => {
     setUser({
+      id: localStorage.getItem("user_id"),
       token: localStorage.getItem("token"),
-      userId: localStorage.getItem("user_id"),
     });
   }, []);
 

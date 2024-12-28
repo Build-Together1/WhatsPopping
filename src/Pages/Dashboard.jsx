@@ -1,25 +1,29 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/Dashboard.css";
-import { getUserDetails } from "../services/apiRequest";
+import { getUserDetails, deleteUser } from "../services/apiRequest";
 import { getEvents } from "../data/event";
-import { UserContext } from "../context/UserContext"; 
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
-  const { user } = useContext(UserContext); 
+  const { user } = useContext(UserContext);
   const [userDetails, setUserDetails] = useState(null);
   const [currentCategory, setCurrentCategory] = useState("paid");
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-      if (!user.userId || !user.token) {
+      if (!user.id) {
         console.error("User is not authenticated. Please log in.");
         setLoading(false);
         return;
       }
 
       try {
-        const response = await getUserDetails(user.userId);
+        const response = await getUserDetails(user.id);
         if (response && response.status === 200) {
           setUserDetails(response.data);
         } else {
@@ -33,10 +37,38 @@ const Dashboard = () => {
     };
 
     fetchUserDetails();
-  }, [user.userId, user.token]);
+  }, [user.id]);
+
+  const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      setLoading(true);
+      const response = await deleteUser(user.id);
+      if (response.status === 200) {
+        toast.success("Account deleted successfully.");
+        navigate("/");
+      } else {
+        alert("Failed to delete your account. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("Failed to delete your account. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+      </div>
+    );
   }
 
   if (!userDetails) {
@@ -47,21 +79,35 @@ const Dashboard = () => {
     <div className="responsive-dashboard">
       <div
         className="cover-photo"
-        style={{ backgroundImage: `url(${userDetails.coverPhoto || ""})` }}
+        style={{
+          backgroundImage: `url(${userDetails.profile_header_path || ""})`,
+        }}
       >
         <div className="profile-info">
           <img
-            src={userDetails.profilePic || ""}
+            src={userDetails.profile_pic_path || ""}
             alt="Profile"
             className="profile-pic"
           />
           <div className="user-info">
             <div>
-              <h2>{userDetails.name}</h2>
+              <h2>{userDetails.username}</h2>
               <p>{userDetails.email_address}</p>
             </div>
             <div>
-              <button>Edit Profile</button>
+              <Link className="pri-btn" to="/edit-profile">
+                Edit Profile
+              </Link>
+            </div>
+            <div>
+              <Link className="pri-btn" to="/event-creation">
+                Create Event
+              </Link>
+            </div>
+            <div>
+              <button className="sec-btn" onClick={handleDeleteAccount}>
+                Delete Account
+              </button>
             </div>
           </div>
         </div>

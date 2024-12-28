@@ -22,17 +22,16 @@ export const createUser = async (data) => {
       data,
       {
         headers: {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
         },
       }
     );
     return response;
   } catch (error) {
-    console.error("API Error:", error.response?.data || error); 
+    console.error("API Error:", error.response?.data || error);
     return error.response;
   }
 };
-
 
 export const generateOtp = async (email_address) => {
   try {
@@ -62,24 +61,74 @@ export const verifyEmail = async ({ email_address, otp }) => {
   }
 };
 
-export const getUserDetails = async (userId) => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-      throw new Error("Token not found");
+export const getUserDetails = async (id) => {
+  if (!id) {
+    throw new Error("User ID not provided");
   }
 
-  return axios.post(
-      `https://whats-popping-server.onrender.com/users/${userId}`,
-      {},
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASEURL}/users/${id}`,
       {
-          headers: {
-              Authorization: `Bearer ${token}`, // Include the token in headers
-          },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       }
-  );
+    );
+    return response;
+  } catch (error) {
+    console.error(
+      "Error fetching user details:",
+      error.response?.data || error
+    );
+    throw error;
+  }
 };
 
+export const updateUserDetails = async (id, data) => {
+  if (!id) {
+    throw new Error("User ID not provided");
+  }
 
+  try {
+    const response = await axios.patch(
+      `${process.env.REACT_APP_BASEURL}/users/${id}`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error updating user details:", error.response?.data || error);
+    throw error;
+  }
+};
+
+export const deleteUser = async (id) => {
+  if (!id) {
+    throw new Error("User ID not provided");
+  }
+
+  try {
+    const response = await axios.delete(
+      `${process.env.REACT_APP_BASEURL}/users/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error deleting user:", error.response?.data || error);
+    throw error;
+  }
+};
 
 export const getEvents = async (request) => {
   try {

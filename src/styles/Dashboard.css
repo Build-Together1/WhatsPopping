@@ -7,6 +7,7 @@ body {
 .responsive-dashboard {
   font-family: 'Arial', sans-serif;
   width: 100%;
+  margin-top: 5%;
 }
 
 .cover-photo {
@@ -35,6 +36,14 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 5%;
+}
+
+.user-info button {
+  width: 150px;
+}
+
+.user-info a {
+  width: 140px;
 }
 
 .profile-pic {

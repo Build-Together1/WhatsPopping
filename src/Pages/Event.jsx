@@ -87,7 +87,7 @@ const Product = () => {
   }, []);
 
   return (
-    <div>
+    <div className="event-page">
       <div className="event-banner">
         <div className="banner-text">
           <h1>Explore Event</h1>

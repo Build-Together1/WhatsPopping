@@ -1,5 +1,10 @@
 .navbarr {
     border-bottom: 1px solid black;
+    position: fixed;
+    width: 100%;
+    background: white;
+    z-index: 1000;
+    top: 0;
 }
 .navbar {
     display: flex;
@@ -59,5 +64,6 @@
 @media screen and (max-width: 500px) {
     .navbar{
         gap: 2.5rem;
+
     }
 }

@@ -3,10 +3,17 @@ import "../styles/Auth.css";
 import SignUp from "./SignUp";
 import Login from "./Login";
 import Modal from "../commponents/Modal";
+import { useNavigate } from "react-router";
 
 const AuthWrapper = () => {
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleHome = () => {
+    navigate("/");
+  };
 
   const handleOpenSignupModal = () => {
     console.log("Signup modal opening...");
@@ -33,6 +40,9 @@ const AuthWrapper = () => {
       </div>
 
       <div className="section2">
+        <div className="back" onClick={handleHome}>
+          ⬅ Back
+        </div>
         <div className="header">
           <h1>Events and Happenings</h1>
           <p>Discover events and happenings around you</p>

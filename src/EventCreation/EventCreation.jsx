@@ -18,7 +18,7 @@ const EventCreation = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { user } = useContext(UserContext); // Access the user context
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -40,15 +40,23 @@ const EventCreation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
-      if (!user?.token) {
+      // Check if user is logged in
+      if (!user.id || !user.token) {
+        console.log("token", user.token);
         setError("User is not authenticated. Please log in first.");
         setLoading(false);
+  
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          navigate("/auth");
+        }, 2000); // 2 seconds delay
         return;
       }
-
-      console.log("Using token:", user.token); // Debugging token
+  
+      console.log("Using token:", user.token);
+      console.log("using id:", user.id);
       const response = await axios.post(
         "https://whats-popping-server.onrender.com/events/",
         formData,
@@ -58,7 +66,7 @@ const EventCreation = () => {
           },
         }
       );
-
+  
       if (response.status === 201) {
         navigate("/event");
       } else {
@@ -78,6 +86,7 @@ const EventCreation = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="event-creation">

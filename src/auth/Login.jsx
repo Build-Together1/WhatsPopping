@@ -4,6 +4,8 @@ import { login } from "../services/apiRequest";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import "../styles/Login.css";
 import { UserContext } from "../context/UserContext";
+import { toast } from "react-toastify";
+import { Spinner } from "react-bootstrap";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -25,15 +27,33 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-  
+
     try {
       const response = await login(formData);
-  
+
       if (response && response.status === 200) {
-        loginUser(response.data.token, response.data.id);
-        console.log(response.data.token, response.data.id);
+        const token = response.data.access_token;
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map(function (c) {
+              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join("")
+        );
+        const id = JSON.parse(jsonPayload).id;
+
+        loginUser(id);
+        localStorage.setItem("token", response.data.access_token);
+
+        toast.success("Login successful!", {
+          autoClose: 3000,
+        });
+
         navigate("/dashboard");
-    } else if (response) {
+      } else if (response) {
         setError(response.data?.message || "Login failed. Please try again.");
       } else {
         setError("Unexpected error occurred. Please try again.");
@@ -41,10 +61,15 @@ const Login = () => {
     } catch (error) {
       if (error.response) {
         setError(
-          `Error: ${error.response.data?.message || "An error occurred. Please try again."}`
+          `Error: ${
+            error.response.data?.message ||
+            "An error occurred. Please try again."
+          }`
         );
       } else if (error.request) {
-        setError("No response from the server. Please check your internet connection.");
+        setError(
+          "No response from the server. Please check your internet connection."
+        );
       } else {
         setError("An error occurred while setting up the request.");
       }
@@ -53,7 +78,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="login">
@@ -104,7 +128,7 @@ const Login = () => {
             </div>
 
             <button type="submit" className="buttonv">
-              {loading ? "Logging in..." : "Login"}
+              {loading ? <Spinner animation="border" size="sm" /> : "Login"}
             </button>
 
             <p className="error-message">
