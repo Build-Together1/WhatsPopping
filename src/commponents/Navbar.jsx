@@ -12,10 +12,10 @@ const Topnav = () => {
 
   const menuData = [
     { path: "/about-us", name: "About Us" },
-    { path: "/event", name: "Events" },
+    { path: "/event", name: "Find Events" },
     { path: "/pricing", name: "Pricing" },
-    { path: "/blog", name: "Blog" },
     { path: "/faq", name: "FAQ's" },
+    { path: "/overview", name: "Create Events" },
   ];
 
   const isAuthOrDashboardPage = [

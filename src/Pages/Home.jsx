@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+import TrendingEvents from "../Event/TrendingEvent";
+// import PopularEvents from "../Event/PopularEvents";
 import useBackground from "../hooks/useBackground";
 import "../styles/Home.css";
-// import FAQ from "../components/Faq";
 import Footer from "./Footer";
 import Profile from "../assets/images/profile.png";
 import Amico from "../assets/images/amico.png";
@@ -28,8 +31,37 @@ const images = [
   require("../assets/images/Prop4.png"),
 ];
 
+const categories = [
+  "Arts",
+  "Culture",
+  "Sports",
+  "Corporate",
+  "Media & Entertainment",
+  "Fashion",
+  "Music",
+  "Food & Drink",
+  "Health",
+  "Science & Tech",
+  "Travel",
+  "Lifestyle",
+  "Education",
+  "Business",
+  "Film",
+  "Hobbies",
+  "Charity",
+  "Religion",
+  "Government",
+  "Community",
+];
+
 const Home = () => {
   const { backgroundImage, isLoading } = useBackground(images, 5000);
+
+  const navigate = useNavigate();
+
+  const handlecategoryClick = () => {
+    navigate("/event");
+  };
 
   if (isLoading) {
     return (
@@ -57,6 +89,31 @@ const Home = () => {
           </div>
         </section>
 
+        <section className="categories">
+          <h2>Let's make it personal</h2>
+          <p>
+            Select your interests to get event suggestions based on what you
+            love
+          </p>
+          <div className="category-switcher">
+            <div className="category-list">
+              {categories.map((category, index) => (
+                <div key={index} className="catt">
+                  <ul>
+                    <li onClick={handlecategoryClick} className="category">
+                      {category}
+                    </li>
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <TrendingEvents />
+
+        {/* <PopularEvents /> */}
+
         <hr />
 
         <section className="services">
@@ -73,12 +130,30 @@ const Home = () => {
                 support.
               </p>
               <ul>
-                <li><img src={ListSetting} alt="" />Attendee Management</li>
-                <li><img src={Share} alt="" />Email Messaging</li>
-                <li><img src={EmailMessage} alt="" />SMS and WhatsApp Messaging</li>
-                <li><img src={RSVP} alt="" />Digital RSVP Forms</li>
-                <li><img src={TimeManagement} alt="" />Session and Attendee Management</li>
-                <li><img src={QRcode} alt="" />QR Code Creation</li>
+                <li>
+                  <img src={ListSetting} alt="" />
+                  Attendee Management
+                </li>
+                <li>
+                  <img src={Share} alt="" />
+                  Email Messaging
+                </li>
+                <li>
+                  <img src={EmailMessage} alt="" />
+                  SMS and WhatsApp Messaging
+                </li>
+                <li>
+                  <img src={RSVP} alt="" />
+                  Digital RSVP Forms
+                </li>
+                <li>
+                  <img src={TimeManagement} alt="" />
+                  Session and Attendee Management
+                </li>
+                <li>
+                  <img src={QRcode} alt="" />
+                  QR Code Creation
+                </li>
               </ul>
             </div>
             <img className="es" src={Amico} alt="" />
@@ -94,12 +169,30 @@ const Home = () => {
                 support.
               </p>
               <ul>
-                <li><img src={Artboard} alt="" />Event Creation & Promotion</li>
-                <li><img src={Ticket} alt="" />Ticket Sales Management</li>
-                <li><img src={CustomerServices} alt="" />Customized Event Branding</li>
-                <li><img src={Analysis} alt="" />Advanced Analytics & Reporting</li>
-                <li><img src={Payment} alt="" />Seamless Payment Integration</li>
-                <li><img src={CustomerSupport} alt="" />Exceptional Customer Support</li>
+                <li>
+                  <img src={Artboard} alt="" />
+                  Event Creation & Promotion
+                </li>
+                <li>
+                  <img src={Ticket} alt="" />
+                  Ticket Sales Management
+                </li>
+                <li>
+                  <img src={CustomerServices} alt="" />
+                  Customized Event Branding
+                </li>
+                <li>
+                  <img src={Analysis} alt="" />
+                  Advanced Analytics & Reporting
+                </li>
+                <li>
+                  <img src={Payment} alt="" />
+                  Seamless Payment Integration
+                </li>
+                <li>
+                  <img src={CustomerSupport} alt="" />
+                  Exceptional Customer Support
+                </li>
               </ul>
             </div>
           </div>
@@ -180,7 +273,9 @@ const Home = () => {
 
         <section className="complement">
           <div className="comlement-text">
-            <h1>Sign up now for a complimentary <br /> trial, risk-free and simple</h1>
+            <h1>
+              Sign up now for a complimentary <br /> trial, risk-free and simple
+            </h1>
             <p>
               Create an unforgettable event experience from free to a paid or
               invite-only event that enhances brand perception. At Whatspopping,
@@ -188,7 +283,9 @@ const Home = () => {
               and sell tickets to your event, creating a memorable experience
               with the right tools and amazing customer support.
             </p>
-            <button>Get Started</button>
+            <Link className="route" to="/auth">
+              Get Started
+            </Link>
           </div>
           <div className="comlement-image">
             <img src={Complement} alt="" />

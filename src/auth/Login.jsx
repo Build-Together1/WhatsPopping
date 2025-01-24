@@ -48,6 +48,9 @@ const Login = () => {
         loginUser(id);
         localStorage.setItem("token", response.data.access_token);
 
+        console.log("Login successful:", response.data.access_token);
+        console.log("User ID:", id);
+
         toast.success("Login successful!", {
           autoClose: 3000,
         });
@@ -117,7 +120,7 @@ const Login = () => {
                   placeholder="Enter your password"
                   required
                 />
-                <button
+                <button 
                   type="button"
                   className="password-toggle-btn"
                   onClick={() => setShowPassword(!showPassword)}

@@ -3,15 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import { getUserDetails, updateUserDetails } from "../services/apiRequest";
 import { toast } from "react-toastify";
+import "./EditProfile.css";
 
 const EditProfile = () => {
   const { user } = useContext(UserContext);
   const [formData, setFormData] = useState({
     name: "",
-    email_address: "",
-    date_of_birth: "",
-    password: "",
-    confirm_password: "",
     username: "",
     profile_header_path: "",
     profile_pic_path: "",
@@ -98,6 +95,42 @@ const EditProfile = () => {
       {error && <p className="error-message">{error}</p>}
 
       <form onSubmit={handleSubmit}>
+        <div className="profile-header">
+          <div className="header-wrapper">
+            <img
+              src={formData.profile_header_path || "/default-header.jpg"}
+              alt="Profile Header"
+              className="header-image"
+            />
+            <label className="upload-header">
+              <input
+                type="file"
+                name="profile_header_path"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              <span>Change Header</span>
+            </label>
+          </div>
+
+          <div className="profile-picture-section">
+            <img
+              src={formData.profile_pic_path || "/default-profile-pic.jpg"}
+              alt="Profile"
+              className="profile-picture"
+            />
+            <label className="upload-profile-pic">
+              <input
+                type="file"
+                name="profile_pic_path"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              <span>Change</span>
+            </label>
+          </div>
+        </div>
+
         <div>
           <label>Name</label>
           <input
@@ -110,27 +143,6 @@ const EditProfile = () => {
         </div>
 
         <div>
-          <label>Email Address</label>
-          <input
-            type="email"
-            name="email_address"
-            value={formData.email_address}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Date of Birth</label>
-          <input
-            type="date"
-            name="date_of_birth"
-            value={formData.date_of_birth}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div>
           <label>Username</label>
           <input
             type="text"
@@ -138,26 +150,6 @@ const EditProfile = () => {
             value={formData.username}
             onChange={handleChange}
             required
-          />
-        </div>
-
-        <div>
-          <label>Profile Header</label>
-          <input
-            type="file"
-            name="profile_header_path"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </div>
-
-        <div>
-          <label>Profile Picture</label>
-          <input
-            type="file"
-            name="profile_pic_path"
-            accept="image/*"
-            onChange={handleImageChange}
           />
         </div>
 
@@ -181,7 +173,7 @@ const EditProfile = () => {
           />
         </div>
 
-        <div>
+        {/* <div>
           <label>Password</label>
           <input
             type="password"
@@ -199,7 +191,7 @@ const EditProfile = () => {
             value={formData.confirm_password}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
 
         <div className="button-group">
           <button type="submit" disabled={loading}>

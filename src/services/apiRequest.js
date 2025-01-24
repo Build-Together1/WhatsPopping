@@ -15,6 +15,37 @@ export const login = async ({ email_address, password }) => {
   }
 };
 
+export const resetPassword = async ({email_address}) => {
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASEURL}/reset_password`,
+      {
+        email_address,
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export const changePassword = async ({email_address, password, confirm_password, otp}) => {
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASEURL}/confirm_password_reset`,
+      {
+        email_address,
+        password,
+        confirm_password,
+        otp
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 export const createUser = async (data) => {
   try {
     const response = await axios.post(
@@ -130,25 +161,89 @@ export const deleteUser = async (id) => {
   }
 };
 
-export const getEvents = async (request) => {
+export const getAllEvents = async () => {
   try {
-    const response = await axios.get(
-      `${process.env.REACT_APP_BASEURL}/events/`,
-      request
-    );
-    return response;
+    const response = await axios.get(`${process.env.REACT_APP_BASEURL}/events/`);
+    return response.data;
   } catch (error) {
-    return error.response;
+    console.error("Error fetching events:", error.response?.data || error);
+    throw error.response || error;
   }
 };
 
-export const getEvent = async (event_id) => {
+export const getEvent = async (eventId) => {
   try {
-    const response = await axios.get(
-      `${process.env.REACT_APP_BASEURL}/events/${event_id}`
+    const response = await axios.get(`${process.env.REACT_APP_BASEURL}/events/${eventId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
     );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching event:", error.response?.data || error);
+    throw error.response || error;
+  }
+};
+
+
+export const createEvent = async (formData, token) => {
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASEURL}/events/`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    localStorage.setItem("eventId", response.data.id);
+    console.log("Event created successfully:", response.data.id);
     return response;
   } catch (error) {
-    return error.response;
+    console.error("Error creating event:", error.response?.data || error);
+    throw error.response || error;
+  }
+};
+
+
+
+export const getEventDetails = async (eventId) => {
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASEURL}/events/${eventId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching event details:", error.response?.data || error);
+    throw error.response || error;
+  }
+};
+
+export const likeEvent = async (event_id) => {
+  try {
+    const response = await axios.post(`${process.env.REACT_APP_BASEURL}/events/${event_id}/like`);
+    return response.data;
+  } catch (error) {
+    console.error("Error liking event:", error.response?.data || error);
+    throw error.response || error;
+  }
+};
+
+export const submitComment = async (event_id, comment) => {
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASEURL}/comments/${event_id}`,
+      { comment },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting comment:", error.response?.data || error);
+    throw error.response || error;
   }
 };

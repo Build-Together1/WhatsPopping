@@ -2,17 +2,16 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* overflow: auto; */
 }
 .responsive-dashboard {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   width: 100%;
   margin-top: 5%;
 }
 
 .cover-photo {
   position: relative;
-  width: 100%; 
+  width: 100%;
   height: 250px;
   background-size: cover;
   background-position: center;
@@ -21,37 +20,52 @@ body {
   padding: 20px;
 }
 
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid #eeeeee;
+  margin-bottom: -20px;
+}
+
 .profile-info {
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: left;
-  padding: 10px;
+  padding: 15px;
   border-radius: 10px;
   color: white;
-  margin-bottom: -150px;
+  margin-bottom: -200px;
 }
 
 .user-info {
   display: flex;
-  align-items: flex-start;
+  justify-content: space-between;
   gap: 5%;
-}
-
-.user-info button {
-  width: 150px;
+  margin-top: 2%;
 }
 
 .user-info a {
   width: 140px;
 }
 
-.profile-pic {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid green;
-  margin-bottom: 10px;
+.user-info-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 5%;
+  margin-top: 2%;
+  width: 100%;
+}
+
+.del-btn {
+  background-color: #eeeeee;
+  color: purple;
+  border: 1px solid purple;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 200px;
 }
 
 .events-section {
@@ -59,7 +73,7 @@ body {
   padding: 15px;
   max-width: 1200px;
   margin: 0 auto;
-  margin-top: 10%;
+
 }
 
 .events-section h2 {
@@ -67,35 +81,14 @@ body {
   margin-bottom: 10px;
 }
 
-.events-section .event-nav {
-  display: flex;
-  justify-content: left;
-}
-
-.events-section .event-nav span {
-  padding: 10px 10px;
-  cursor: pointer;
-  font-size: 18px;
-  border-radius: 8px;
-  transition: color 0.3s ease;
-}
-
-.events-section .event-nav .active {
-  color: #007bff;
-}
-
-.events-section .event-nav span:hover {
-  color: #007bff;
-}
-
 .events-section .events {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  margin-top: -3%;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 3%;
 }
 
 .events-section .event {
-  width: 300px;
+  /* width: 300px; */
   border: 1px solid #ccc;
   border-radius: 8px;
   overflow: hidden;
@@ -104,7 +97,8 @@ body {
 
 .events-section .event img {
   width: 100%;
-  height: auto;
+  height: 30vh;
+  object-fit: cover;
 }
 
 .events-section .event .event-details {
@@ -138,34 +132,27 @@ body {
   transform: translateY(-5px);
 }
 
-.create-event-section form {
-  display: flex;
-  flex-direction: column;
-}
 
-.create-event-section form label {
-  margin-bottom: 10px;
-}
-
-.create-event-section form input,
-.create-event-section form textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.create-event-section form button {
+.pri-btnn {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 16px;
+  background-color: purple;
+  color: white;
+  font-size: 1rem;
+  /* width: 40%; */
+  display: block;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  text-decoration: none;
 }
 
-.create-event-section form button:hover {
-  background-color: #0056b3;
+.pri-btnn:hover {
+  background-color: white;
+  color: purple;
+  /* border: 1px solid purple; */
+}
+
+.user-events-section{
+  margin-top: 15%;
 }

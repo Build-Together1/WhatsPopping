@@ -116,26 +116,6 @@ body {
   padding: 0 0 20px 30px;
 }
 
-.event-nav {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  padding: 0 30px 50px 30px;
-}
-
-.event-nav span {
-  color: gray;
-    font-size: 1.2rem;
-    font-weight: bolder;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.event-nav span.active {
-  color: purple;
-  text-decoration: underline;
-}
-
 .events {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -153,7 +133,8 @@ body {
 
 .event img {
   width: 100%;
-  height: auto;
+  height: 30vh;
+  object-fit: cover;
   border-radius: 10px 10px 0 0;
 }
 

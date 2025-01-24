@@ -7,8 +7,8 @@ body {
   background-color: #eeeeee;
 }
 .spinner {
-  border: 16px solid #f3f3f3; 
-  border-top: 16px solid purple; 
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid purple;
   border-radius: 50%;
   width: 120px;
   height: 120px;
@@ -18,15 +18,19 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; 
+  height: 100vh;
 }
 
 .about-us {
@@ -47,7 +51,7 @@ p {
 .about-banner {
   max-width: 100%;
   padding: 15% 20px 15% 20px;
-  margin: 0% auto 10% auto;
+  margin: 0% auto 5% auto;
   text-align: center;
   background-size: cover;
   background-position: center;
@@ -105,10 +109,67 @@ p {
   transition: 0.5s;
 }
 
+/* categories */
+.categories {
+  max-width: 100%;
+  margin: 0% auto;
+  margin-bottom: 5%;
+  padding: 0 5%;
+}
+
+.categories h2 {
+  font-weight: bolder;
+  color: purple;
+  text-align: left;
+}
+
+.categories p {
+  color: #000000;
+  font-size: 1rem;
+  margin-bottom: 5%;
+  text-align: left;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+  gap: 15px;
+  justify-content: center;
+}
+
+
+.category-list ul {
+  list-style-type: none;
+}
+
+.catt ul{
+  transition: transform 0.5s ease-in-out;
+}
+
+.category {
+  border: 1px solid #000000;
+  padding: 10px;
+  border-radius: 50px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.category:hover {
+  background-color: #3e065e;
+  color: white;
+  transition: 0.5s;
+}
+/* event list */
+
+
+
 hr {
   width: 5%;
   margin: 0% auto;
   border: 5px solid purple;
+  margin-top: 3%;
 }
 
 /* service */
@@ -274,16 +335,17 @@ hr {
   font-size: 1.2rem;
 }
 
-.comlement-text button {
+.comlement-text .route {
   background-color: #3e065e;
   color: white;
   padding: 10px 40px;
   width: 50%;
   border: none;
   border-radius: 20px;
+  text-decoration: none;
 }
 
-.comlement-text button:hover {
+.comlement-text .route:hover {
   background-color: #ebc9fe;
   color: #3e065e;
   border: 1px solid #3e065e;
@@ -356,10 +418,8 @@ hr {
     width: 100%;
   }
 
-  
-
   .each img.es {
-    order: -1; 
+    order: -1;
   }
 
   .find-event {

@@ -1,35 +1,33 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Event.css";
 import Footer from "./Footer";
 import Exp1 from "../assets/images/Exp1.png";
 import Exp2 from "../assets/images/Exp2.png";
 import Exp3 from "../assets/images/Exp3.png";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { getAllEvents, likeEvent, submitComment } from "../services/apiRequest";
 
 const Product = () => {
   const [eventsData, setEventsData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const fetchEvents = async () => {
+  const loadEvents = async () => {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch(
-        `https://whats-popping-server.onrender.com/events/`,
-        { method: "GET" }
+      const data = await getAllEvents();
+      setEventsData(
+        data.map((event) => ({
+          ...event,
+          liked: false,
+          showCommentForm: false,
+        }))
       );
-      if (!response.ok) {
-        throw new Error("Failed to fetch events");
-      }
-      const data = await response.json();
-      setEventsData(data.map(event => ({
-        ...event,
-        liked: false,
-        showCommentForm: false,
-      })));
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Failed to load events");
     } finally {
       setLoading(false);
     }
@@ -37,53 +35,42 @@ const Product = () => {
 
   const handleLove = async (event_id, index) => {
     try {
-      const response = await fetch(
-        `https://whats-popping-server.onrender.com/events/${event_id}/like`,
-        { method: "POST" }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to like event");
-      }
+      await likeEvent(event_id);
       const updatedEvents = [...eventsData];
       updatedEvents[index].liked = !updatedEvents[index].liked;
-      updatedEvents[index].likes.like_count += updatedEvents[index].liked ? 1 : -1;
+      updatedEvents[index].likes.like_count += updatedEvents[index].liked
+        ? 1
+        : -1;
       setEventsData(updatedEvents);
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message || "Failed to like event");
     }
   };
 
   const handleCommentSubmit = async (event_id, index, comment) => {
     try {
-      const response = await fetch(
-        `https://whats-popping-server.onrender.com/comments/${event_id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ comment }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to submit comment");
-      }
+      await submitComment(event_id, comment);
       const updatedEvents = [...eventsData];
       updatedEvents[index].comments.push(comment);
       setEventsData(updatedEvents);
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message || "Failed to submit comment");
     }
   };
 
   const toggleCommentForm = (index) => {
     const updatedEvents = [...eventsData];
-    updatedEvents[index].showCommentForm = !updatedEvents[index].showCommentForm;
+    updatedEvents[index].showCommentForm =
+      !updatedEvents[index].showCommentForm;
     setEventsData(updatedEvents);
   };
 
+  const handleEventClick = (event_id) => {
+    navigate(`/events/${event_id}`);
+  };
+
   useEffect(() => {
-    fetchEvents();
+    loadEvents();
   }, []);
 
   return (
@@ -116,7 +103,7 @@ const Product = () => {
       </div>
 
       <div className="event-list">
-        <h1>Events</h1>
+        <h1>Trending Events</h1>
         <div className="events">
           {loading && <p>Loading events...</p>}
           {error && <p className="error">{error}</p>}
@@ -126,12 +113,22 @@ const Product = () => {
               <div key={index} className="event">
                 <img src={event.event_image} alt="Event" />
                 <div className="event-details">
-                  <h3>{event.event_name}</h3>
+                  <h3
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleEventClick(event.id)}
+                  >
+                    {event.event_name}
+                  </h3>
                   <p>{event.event_location}</p>
                   <p>{event.event_date}</p>
                   <p>{event.event_time}</p>
                   <div className="like-comment-section">
-                    <button onClick={() => handleLove(event.id, index)}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLove(event.id, index);
+                      }}
+                    >
                       {event.liked ? (
                         <AiFillHeart style={{ color: "red" }} />
                       ) : (
@@ -139,7 +136,12 @@ const Product = () => {
                       )}
                     </button>
                     <span>{event.likes.like_count} Likes</span>
-                    <button onClick={() => toggleCommentForm(index)}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleCommentForm(index);
+                      }}
+                    >
                       Comment
                     </button>
                     {event.showCommentForm && (

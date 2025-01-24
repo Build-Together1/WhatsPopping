@@ -1,16 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/Dashboard.css";
-import { getUserDetails, deleteUser } from "../services/apiRequest";
-import { getEvents } from "../data/event";
+import {
+  getUserDetails,
+  deleteUser,
+  // getAllEvents,
+} from "../services/apiRequest";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import TrendingEvents from "../Event/TrendingEvent";
+import Footer from "./Footer";
+import axios from "axios";
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);
   const [userDetails, setUserDetails] = useState(null);
-  const [currentCategory, setCurrentCategory] = useState("paid");
+  const [userEvents, setUserEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -31,12 +37,47 @@ const Dashboard = () => {
         }
       } catch (error) {
         console.error("Error fetching user details:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchUserDetails();
+    //   try {
+    //     const eventsData = await getAllEvents();
+    //     setEvents(eventsData);
+    //   } catch (error) {
+    //     console.error("Error fetching events:", error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+
+    const fetchUserEvents = async () => {
+      try {
+        const response = await axios.get(
+          `https://whats-popping-server.onrender.com/user/events/${user.id}`,
+          console.log("User ID:", user.id),
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          setUserEvents(response.data);
+        } else {
+          console.error("Failed to fetch user events:", response?.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user events:", error);
+      }
+    };
+
+    const fetchData = async () => {
+      setLoading(true); 
+      await Promise.all([fetchUserDetails(), fetchUserEvents()]);
+      setLoading(false); 
+    };
+  
+    fetchData();
   }, [user.id]);
 
   const handleDeleteAccount = async () => {
@@ -62,6 +103,14 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  const handleEventClick = (eventId) => {
+    localStorage.setItem("eventId", eventId);
+    // navigate(`/event/${eventId}`);
+    // navigate(`/event-details/${eventId}`);
+    console.log("Event ID:", eventId);
+  };
+  
 
   if (loading) {
     return (
@@ -91,68 +140,55 @@ const Dashboard = () => {
           />
           <div className="user-info">
             <div>
-              <h2>{userDetails.username}</h2>
-              <p>{userDetails.email_address}</p>
+              <h2>{userDetails.name}</h2>
+              <p>@{userDetails.username}</p>
+              <div className="user-info-actions">
+                <Link className="pri-btnn" to="/event-creation">
+                  Create Event
+                </Link>
+                <button className="del-btn" onClick={handleDeleteAccount}>
+                  Delete Account
+                </button>
+              </div>
             </div>
             <div>
               <Link className="pri-btn" to="/edit-profile">
                 Edit Profile
               </Link>
             </div>
-            <div>
-              <Link className="pri-btn" to="/event-creation">
-                Create Event
-              </Link>
-            </div>
-            <div>
-              <button className="sec-btn" onClick={handleDeleteAccount}>
-                Delete Account
-              </button>
-            </div>
           </div>
         </div>
       </div>
-      <div className="events-section">
-        <h2>Events</h2>
-        <div className="event-nav">
-          <span
-            className={currentCategory === "paid" ? "active" : ""}
-            onClick={() => setCurrentCategory("paid")}
-          >
-            Paid Events
-          </span>
-          <span
-            className={currentCategory === "free" ? "active" : ""}
-            onClick={() => setCurrentCategory("free")}
-          >
-            Free Events
-          </span>
-          <span
-            className={currentCategory === "foryou" ? "active" : ""}
-            onClick={() => setCurrentCategory("foryou")}
-          >
-            For You
-          </span>
-        </div>
-        <div className="events">
-          {getEvents(currentCategory).map((event, index) => (
-            <div key={index} className="event">
-              <img src={event.image} alt="Event" />
-              <div className="event-details">
-                <h3>{event.title}</h3>
-                <p>{event.location}</p>
-                <p>{event.date}</p>
-                <div className="event-price">
-                  {currentCategory === "paid" && <p>$50</p>}
-                  <p>
-                    <strong>Get tickets</strong>
-                  </p>
+
+      <div className="user-events-section">
+        <h2>Your Created Events</h2>
+        <div className="user-events">
+          {userEvents.length > 0 ? (
+            userEvents.map((event, index) => (
+              <div key={index} className="event">
+                <img src={event.event_image} alt="Event" />
+                <div className="event-details">
+                  <h3
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleEventClick(event.id)}
+                  >
+                    {event.event_name}
+                  </h3>
+                  <p>{event.event_description}</p>
+                  <p>{event.event_location}</p>
+                  <p>{event.event_date}</p>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>No events created yet.</p>
+          )}
         </div>
       </div>
+
+      <TrendingEvents />
+
+      <Footer />
     </div>
   );
 };

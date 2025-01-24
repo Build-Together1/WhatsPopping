@@ -7,16 +7,17 @@ import Community from "./Pages/Community";
 import AboutUs from "./Pages/Aboutus";
 import Contact from "./Pages/Contact";
 import Faq from "./Pages/Faq";
-import Blog from "./Pages/Blog";
+import Overview from "./Pages/Overview";
 import Event from "./Pages/Event";
 import Error from "./Pages/Error";
 import ForgotPassword from "./auth/ForgotPassword";
 import Dashboard from "./Pages/Dashboard";
-import EventCreation from "./EventCreation/EventCreation";
+import EventCreation from "./Event/EventCreation";
+import EventDetails from "./Event/EventDetails";
 import Pricing from "./Pages/Pricing";
 import DashboardWrapper from "./dashboard/DashboardWrapper";
-import Header from "./dashboard/component/Header";
-import Sidebar from "./dashboard/component/AdminSideBar";
+// import Header from "./dashboard/component/Header";
+// import Sidebar from "./dashboard/component/AdminSideBar";
 import AdminDashboard from "./dashboard/AdminDashboard";
 import EventManagement from "./dashboard/EventManagement";
 import AttendeeManagement from "./dashboard/AttendeeManagement";
@@ -39,10 +40,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/community" element={<Community />} />
           <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/overview" element={<Overview />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<Faq />} />
-          <Route path="/blog" element={<Blog />} />
           <Route path="/event" element={<Event />} />
+          <Route path="/event/:eventId" element={<EventDetails />} />
           <Route path="*" element={<Error />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
