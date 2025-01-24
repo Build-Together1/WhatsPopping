@@ -158,6 +158,7 @@ const SignUp = () => {
               <div className="form-fields">
                 <div className="form-group">
                   <label>Password</label>
+                  <div className="password-input-container">
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
@@ -171,9 +172,11 @@ const SignUp = () => {
                   >
                     {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
                   </button>
+                  </div>
                 </div>
                 <div className="form-group">
                   <label>Confirm Password</label>
+                  <div className="password-input-container">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirm_password"
@@ -191,6 +194,7 @@ const SignUp = () => {
                       <AiFillEye />
                     )}
                   </button>
+                  </div>
                 </div>
               </div>
               <button

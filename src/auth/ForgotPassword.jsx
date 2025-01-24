@@ -70,7 +70,7 @@ const ForgotPassword = () => {
             </div>
 
             <button type="submit" className="buttonv">
-              {loading ? "Sending..." : "Send Reset Instructions"}
+              {loading ? "Sending..." : "Reset Password"}
             </button>
 
             {error && <p className="error-message">{error}</p>}
