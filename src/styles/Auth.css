@@ -12,6 +12,14 @@
   background-color: purple;
 }
 
+.back{
+  cursor: pointer;
+}
+
+.back:hover{
+  color: purple;
+}
+
 .section1 {
   width: 100%;
   /* max-width: 500px; */

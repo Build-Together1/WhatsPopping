@@ -3,6 +3,7 @@ import "../styles/Signup.css";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import { createUser, verifyEmail } from "../services/apiRequest";
+import { toast } from "react-toastify";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { UserContext } from "../context/UserContext";
 
@@ -37,7 +38,14 @@ const SignUp = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, [e.target.name]: file });
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setFormData({
+          ...formData,
+          [e.target.name]: reader.result,
+        });
+      };
     }
   };
 
@@ -65,16 +73,17 @@ const SignUp = () => {
         otp,
       });
       if (response.status === 200) {
-        // loginUser(response.data.token, response.data.id);
-        navigate("/dashboard");
+        toast.success("Email verified successfully! Please login to continue.");
+        navigate("/auth");
       } else {
-        setError(response.data.message || "Failed to verify email");
+        toast.error(response.data.message || "Failed to verify email");
       }
     } catch (error) {
-      setError("An error occurred during email verification");
+      toast.error("An error occurred during email verification");
     }
     setLoading(false);
   };
+  
 
   const handleSubmitForm = async () => {
     setLoading(true);
@@ -89,7 +98,7 @@ const SignUp = () => {
       const response = await createUser(payload);
 
       if (response.status === 201) {
-        loginUser(response.data.token, response.data.id);
+        loginUser(response.data.id);
         handleNextStep();
       } else {
         setError(response.data.message || "Failed to create account");
@@ -159,41 +168,44 @@ const SignUp = () => {
                 <div className="form-group">
                   <label>Password</label>
                   <div className="password-input-container">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder="Enter password"
-                    onChange={handleChange}
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle-btn"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
-                  </button>
+
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Enter password"
+                      onChange={handleChange}
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                    </button>
                   </div>
                 </div>
                 <div className="form-group">
                   <label>Confirm Password</label>
                   <div className="password-input-container">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    name="confirm_password"
-                    placeholder="Confirm password"
-                    onChange={handleChange}
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle-btn"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? (
-                      <AiFillEyeInvisible />
-                    ) : (
-                      <AiFillEye />
-                    )}
-                  </button>
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirm_password"
+                      placeholder="Confirm password"
+                      onChange={handleChange}
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <AiFillEyeInvisible />
+                      ) : (
+                        <AiFillEye />
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>

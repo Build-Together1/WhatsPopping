@@ -19,7 +19,7 @@ const Aboutus = () => {
   return (
     <>
       <div className="aboutus-container">
-        <section className="intro text-center mt-5">
+        <section className="intro intro-container text-center mt-5">
           <h3 className="maintxt mt-5">
             Connecting people through <br />
             unforgettable experiences
